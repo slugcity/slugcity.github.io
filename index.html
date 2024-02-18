@@ -1,0 +1,372 @@
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <title>ian awesome</title>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="icon" href="favicon.ico">
+  <meta name="description" content="ian awesome">
+  <style type="text/css">      body { background-color: #313131; font-family: 'Helvetica'; font-weight: bold; color:#000; margin:0; padding:0; border:0;}
+      a { color:#00000; text-decoration: none; }
+      a:hover { color:#ff6f01; }
+      input { border-radius:0; }
+      #container { position: absolute; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
+      #title { display:block; position:absolute; height: 5em; text-align:center; margin:auto; bottom:5.6em; left:7em; color:#000; opacity: 0; }
+      #links { text-align:left; color:#fff; display:block; position:relative; width: 10em; height:5em; bottom: 6.4em; left:103%; z-index: 2; font-size: 0.75em; font-weight: normal; }
+      #links a { color:#000; }
+      #links a:hover { color:#DD6E0F; }
+      .pointer       { cursor: pointer; }
+
+      @media (min-width: 425px) and (orientation:portrait) {
+        #links { bottom: 11.5em; left:0em; font-size: 1.5em; }
+      }
+
+      @media (max-width: 1280px) and (orientation:landscape) {
+        #logo { max-height:10%; max-width:25%; }
+      }
+      @keyframes slidein {
+       0%   {margin-left: 100%;}
+       100%  {margin-left:15px;}
+
+      }
+      @keyframes slidein2 {
+       0%   {margin-left: 100%;}
+       100%  {margin-left: 0px;}
+
+      }
+	#cardtitle { color:#fff; font-size:2em;margin-left:15px;display:block;text-shadow: 0px 2px 5px #000;}
+    #carddate { color:#000; font-size:1em; font-weight: normal;margin-left:15px;}
+    #cardsubtext { color:#fff; font-size:1.3em; font-weight: normal;margin-left:15px;text-shadow: 0px 2px 5px #000;}
+    #cardsubtext2 { color:#fff; font-size:.9em; font-weight: normal;margin-left:15px;display:block;text-shadow: 0px 2px 5px #000;}
+    #cardlink { color:#DD6E0F; font-size: 1em; font-weight: normal;margin-left:15px;display:block;text-shadow: 0px 2px 5px #000;}
+    #cardlink a:hover { color:#fff; }
+    #cardlink2 { color:#DD6E0F; font-size: 1em; font-weight: normal;align-self: flex-end;
+    margin-left: 4px;}
+    #cardlink2 a:hover { color:#fff; }
+    #maintitle {display:block;position:absolute;color:#000;font-size: 3em;font-weight: normal;margin:auto;left:15px;top:50px;display:block;}
+    #cardsmalltitle { color:#fff; font-size:1.3em;margin-left:15px;display:block;text-shadow: 0px 2px 5px #000;}
+
+
+    #date {display:block; position:absolute;color:#666666; font-size: 1em; font-weight: normal;margin:auto;left:15px;top:1%;}
+
+	li:artists {
+	    cursor: pointer;
+	}
+
+   .scrolling-wrapper-flexbox {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    position:absolute;
+  }
+
+  .card {
+  	animation-name: slidein;
+    animation-duration: 1.5s;
+    aspect-ratio : 1 / 1;
+    --border: 2px solid black;
+    height:90%;
+
+    background: #000;
+    margin-left:15px;
+    display:flex;
+    border-radius:10px;
+    box-shadow: 0px 3px 10px #000;
+  }
+
+.card > span {
+    align-self: flex-end;
+    margin-left: 4px;
+}
+
+.cardsmallt {
+    aspect-ratio : 1.5 / 1;
+    --border: 2px solid black;
+    height:29%;
+    background: #000;
+    --margin-left: 30px;
+    display:flex;
+    border-radius:10px;
+    box-shadow: 0px 3px 10px #000;
+  }
+ .cardsmallm {
+    aspect-ratio : 1.5 / 1;
+    --border: 2px solid black;
+    height:29%;
+    margin-top: 3.25%;
+    background: #000;
+    --margin-left: 30px;
+    display:flex;
+    border-radius:10px;
+    box-shadow: 0px 3px 10px #000;
+ }
+.cardsmallb {
+    aspect-ratio : 1.5 / 1;
+    --border: 2px solid black;
+    height:29%;
+    margin-top: 3.25%;
+    background: #000;
+    --margin-left: 30px;
+    display:flex;
+    border-radius:10px;
+    box-shadow: 0px 3px 10px #000;
+
+  }
+
+  .cardmidt {
+    aspect-ratio : 1 / 1;
+    --border: 2px solid black;
+    height:44.25%;
+    background: #000;
+    --margin-left: 30px;
+    display:flex;
+    border-radius:10px;
+    box-shadow: 0px 3px 10px #000;
+  }
+.cardmidb {
+    aspect-ratio : 1 / 1;
+    --border: 2px solid black;
+    height:44.25%;
+    margin-top: 3%;
+    background: #000;
+    --margin-left: 30px;
+    display:flex;
+    border-radius:10px;
+    box-shadow: 0px 3px 10px #000;
+  }
+
+.cardsmallt > span, .cardsmallm > span, .cardsmallb > span, .cardmidt > span, .cardmidb > span  {
+    align-self: flex-end;
+    margin-left: 4px;
+}
+.smallcards {
+	--margin-right:30px;
+    margin-left:15px;
+    height:100%;
+    aspect-ratio : .4 / 1;
+    animation-name: slidein;
+    animation-duration: 1.5s;
+  }
+
+  .scrolling-wraper, .scrolling-wrapper-flexbox {
+  	margin-top: 12%;
+    width: 100%;
+    height:75%;
+    -webkit-overflow-scrolling: touch;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+	.scrolling-wrapper-flexbox::-webkit-scrollbar {
+  display: none;
+}</style>
+</head>
+<body style="zoom: 1;">
+
+	<span id="date"><span id="p1"></span> // ian's awesome site by ian</span>
+    <br>
+    <!-- <p><span id="maintitle">ian awesome</span></p> -->
+
+	<div class="scrolling-wrapper-flexbox">
+
+    <!-- 2 -->
+	<div class="smallcards">
+
+    <div class="cardmidt" style="background-image: url(
+    cards/mid/tinydungeon.png
+    );background-position: center;background-size: cover;background-repeat: no-repeat;"><span><p><span id="cardsmalltitle">
+    tiny dungeon
+    </span><span id="cardsubtext2">
+    sequel to a cult classic
+    </span><span id="cardlink">
+    <a target="_blank"><u>coming soon!</u></a>
+    </span>
+    </p></span></div>
+
+    <div class="cardmidb" style="background-image: url(
+    cards/mid/omb.png
+    );background-position: center;background-size: cover;background-repeat: no-repeat;"><span><p><span id="cardsmalltitle">
+    one more block
+    </span><span id="cardsubtext2">
+    c418-inspired electronic ep
+    </span><span id="cardlink">
+    <a target="_blank" href="https://open.spotify.com/album/0pzjkBXZuGlpmbKIrpuScK?si=gPeVHlzFTculivGQuHZztg"><u>spotify</u>&nbsp;</a>
+    <a target="_blank" href="https://music.apple.com/us/album/one-more-block-ep/1639742024"><u>apple music</u></a>
+    </span>
+    </p></span></div>
+
+    </div>
+
+    <!-- 3 -->
+    <div class="smallcards">
+
+    <div class="cardsmallt" style="background-image: url(
+    cards/small/teeny.png
+    );background-position: center;background-size: cover;background-repeat: no-repeat;"><span><p><span id="cardsmalltitle">
+    teeny dungeon
+    </span><span id="cardsubtext2">
+    traverse a tiny, yet infinite dungeon!
+    </span><span id="cardlink">
+    <a target="_blank" href="https://apps.apple.com/us/app/teeny-dungeon/id6447354230"><u>ios</u>&nbsp;</a>
+    <a target="_blank" href="downloads/teeny/teenymac.zip"><u>macos</u></a>
+    </span>
+    </p></span></div>
+
+    <div class="cardsmallm" style="background-image: url(
+    cards/small/iancraft.png
+    );background-position: center;background-size: cover;background-repeat: no-repeat;"><span><p><span id="cardsmalltitle">
+    iancraft
+    </span><span id="cardsubtext2">
+    minecraft but awesome<br>java ed. resource pack
+    </span><span id="cardlink">
+    <a target="_blank" href="downloads/iancraft/iancraft.zip"><u>zip</u></a>
+    </span>
+    </p></span></div>
+
+    <div class="cardsmallb" style="background-image: url(
+    cards/small/picocraft.png
+    );background-position: center;background-size: cover;background-repeat: no-repeat;"><span><p><span id="cardsmalltitle">
+    picocraft
+    </span><span id="cardsubtext2">
+    minecraft classic in pico8
+    </span><span id="cardlink">
+    <a target="_blank" href="downloads/picocraft/picocraft.zip"><u>universal</u>&nbsp;</a>
+    <a target="_blank" href="picocraft.html"><u>browser</u></a>
+    </span>
+    </p></span></div>
+
+    </div>
+
+	<!-- 2 -->
+	<div class="smallcards">
+
+    <div class="cardmidt" style="background-image: url(
+    cards/mid/nahwc.png
+    );background-position: center;background-size: cover;background-repeat: no-repeat;"><span><p><span id="cardsmalltitle">
+    not all heroes wear capes
+    </span><span id="cardsubtext2">
+    morally gray fighting game<br>ugahacks 9 best solo project winner
+    </span><span id="cardlink">
+    <a target="_blank" href="downloads/nahwc/nahwcmac.zip"><u>macos</u></a>
+    </span>
+    </p></span></div>
+
+    <div class="cardmidb" style="background-image: url(
+    cards/mid/vg.png
+    );background-position: center;background-size: cover;background-repeat: no-repeat;"><span><p><span id="cardsmalltitle">
+    volume gamma
+    </span><span id="cardsubtext2">
+    debut electronic album
+    </span><span id="cardlink">
+    <a target="_blank" href="hhttps://open.spotify.com/album/19UI7TNPEzdTfhFySl7pcG?si=wbbnJdeCRxmRiutI-GDI5w"><u>spotify</u>&nbsp;</a>
+    <a target="_blank" href="https://music.apple.com/us/album/volume-gamma/1621812387"><u>apple music</u></a>
+    </span>
+    </p></span></div>
+
+    </div>
+
+	<!-- 3 -->
+    <div class="smallcards">
+
+    <div class="cardsmallt" style="background-image: url(
+    cards/small/sexkick.png
+    );background-position: center;background-size: cover;background-repeat: no-repeat;"><span><p><span id="cardsmalltitle">
+    sexkick
+    </span><span id="cardsubtext2">
+    not the worst fighting game ever made
+    </span><span id="cardlink">
+    <a target="_blank" href="downloads/sexkick/sexkick.zip"><u>universal</u></a>
+    </span>
+    </p></span></div>
+
+    <div class="cardsmallm" style="background-image: url(
+    cards/small/papi.png
+    );background-position: center;background-size: cover;background-repeat: no-repeat;"><span><p><span id="cardsmalltitle">
+    super papi world
+    </span><span id="cardsubtext2">
+    2d platformer maker
+    </span><span id="cardlink">
+    <a target="_blank" href="downloads/papi/papidemomac.zip"><u>macos demo</u></a>
+    </span>
+    </p></span></div>
+
+
+    <div class="cardsmallb" style="background-image: url(
+    cards/small/dynasaur.png
+    );background-position: center;background-size: cover;background-repeat: no-repeat;"><span><p><span id="cardsmalltitle">
+    dynasaur
+    </span><span id="cardsubtext2">
+    the worst fighting game ever made
+    </span><span id="cardlink">
+    <a target="_blank" href="downloads/dynasaur/dynasaur.zip"><u>universal</u></a>
+    </span>
+    </p></span></div>
+
+    </div>
+
+	<!-- 3 -->
+    <div class="smallcards">
+
+    <div class="cardsmallt" style="background-image: url(
+    cards/small/1000mi.png
+    );background-position: center;background-size: cover;background-repeat: no-repeat;"><span><p><span id="cardsmalltitle">
+    1000 mile drive
+    </span><span id="cardsubtext2">
+    drive 1000 miles
+    </span><span id="cardlink">
+    <a target="_blank" href="downloads/1000mi/1000mi.zip"><u>universal</u></a>
+    </span>
+    </p></span></div>
+
+    <div class="cardsmallm" style="background-image: url(
+    cards/small/funpaint.png
+    );background-position: center;background-size: cover;background-repeat: no-repeat;"><span><p><span id="cardsmalltitle">
+    funpaint
+    </span><span id="cardsubtext2">
+    basic paint editor
+    </span><span id="cardlink">
+    <a target="_blank" href="downloads/funpaint/funpaintmac.zip"><u>macos</u></a>
+    </span>
+    </p></span></div>
+
+    <div class="cardsmallb" style="background-image: url(
+    cards/small/redrock.png
+    );background-position: center;background-size: cover;background-repeat: no-repeat;"><span><p><span id="cardsmalltitle">
+    redrock
+    </span><span id="cardsubtext2">
+    school project<br>by ian, will, and grey
+    </span><span id="cardlink">
+    <a target="_blank" href="downloads/redrock/redrock.zip"><u>universal</u></a>
+    </span>
+    </p></span></div>
+
+    </div>
+
+
+	<!-- 1
+    <div class="card" style="background-image: url(
+    cards/doodle.png
+    );background-position: center;background-size: cover;background-repeat: no-repeat;"><span><p><span id="cardtitle">
+    CARD!
+    </span><span id="cardsubtext">
+    Description
+    </span><span id="cardlink">
+    <a href="about">READ MORE</a>
+    </span>
+    </p></span></div>
+    -->
+
+	<div class="smallcards">
+    </div>
+
+
+  </div>
+
+<script>
+	var date = new Date();
+	var current_date = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+ date.getDate();
+	document.getElementById("p1").innerHTML = current_date;
+</script>
+
+
+
+</body></html>
