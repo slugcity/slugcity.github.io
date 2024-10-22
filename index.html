@@ -5,7 +5,7 @@
   <link rel="icon" href="favicon.ico">
   <meta name="description" content="OLLIE MAKES STUFF!">
   <style type="text/css">
-  body { background-color: #313131; font-family: 'Helvetica'; font-weight: bold; color:#000; margin:0; padding:0; border:0;}
+	    body { background-color: #313131; font-family: 'Helvetica'; font-weight: bold; color:#000; margin:0; padding:0; border:0;}
       a { color:#00000; text-decoration: none; }
       a:hover { color:#ff6f01; }
       input { border-radius:0; }
@@ -22,15 +22,15 @@
 	@media (max-width: 1280px) and (orientation:landscape) {
       	  #logo { max-height:10%; max-width:25%; }
 	}
-	@font-face { font-family: Foggy; src: url('Foggy.TTF'); } 
+	@font-face { font-family: Foggy; src: url('Foggy.ttf'); } 
 
-	#cardtitle { color:#fff; font-size:2em;margin-left:30px;display:block;font-family: 'Foggy'}
+	#cardtitle { color:#fff; font-weight: normal;font-size:2.5em;margin-left:30px;display:block;font-family: 'Foggy'}
     
     #cardsubtext { color:#fff; font-size:1.3em; font-weight: normal;margin-left:30px;}
     
     #cardlink { color:#DD6E0F; font-size: 1em; font-weight: normal;margin-left:30px;display:block;}
     #cardlink a:hover { color:#fff; }
-    #maintitle {color:#000;font-size: 3em;font-weight: normal;color:#fff;font-family: 'Foggy'}
+    #maintitle {color:#000;font-size: 6em;font-weight: normal;color:#fff;font-family: 'Foggy'}
     #subtitle { color:#fff; font-size:1.3em; font-weight: normal;}
     #cardsmalltitle { color:#fff; font-size:1.3em;margin-left:15px;display:block;}
 
@@ -39,7 +39,7 @@
 
    .scrolling-wrapper-flexbox {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     overflow-x: auto;
     background: #F00;
     margin-left: 30px;
@@ -79,7 +79,8 @@
 
 	.scrolling-wrapper-flexbox::-webkit-scrollbar {
   display: none;
-}</style>
+}
+  </style>
 </head>
 <body style="zoom: 1;">
 
