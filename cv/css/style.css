@@ -1,0 +1,305 @@
+@font-face { font-family: myfont; src: url('/istolethisfont.woff'); }
+@font-face { font-family: myfont2; src: url('/istolethisonetoo.ttf'); }
+
+@keyframes bob1 {
+    0%   {transform: translate(0.25em,0px);}
+    50%  {transform: translate(-0.25em,0px);}
+    100% {transform: translate(0.25em,0px);}
+  }
+
+/* General Styles */
+body {
+    margin: 0px;
+    font-family: myfont;
+}   
+
+/* Nav Styles */
+nav {
+    background-color: black;
+    color: white;
+    display: flex;
+    letter-spacing: .35em;
+    flex-flow: column;
+    font-size: 1.25em;
+    padding-top: 1em;
+    font-weight: bold;
+    padding-left: 1.5em;
+}
+
+nav p, nav a {
+    text-decoration: none;
+    color: white;
+    margin-top: 0em;
+    margin-bottom: 0.8em;
+}
+
+nav a:before {
+    content:"-> ";
+}
+
+
+nav a {
+    margin-left: 5.5em;
+    transition-duration: 200ms;
+    color: rgb(247, 180, 45);
+    text-shadow: 0em 0em 0px rgb(247, 180, 45);
+}
+
+nav a:hover {
+    text-decoration: none;
+    text-shadow: 0em 0em 5px rgb(247, 180, 45);
+    transition-duration: 200ms;
+}
+
+/* Footer Styles */
+footer {
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    font-size: 1.25em;
+    letter-spacing: .5em;
+}
+
+footer a {
+    color: rgb(247, 180, 45);
+    text-decoration: none;
+    margin-top: 0.8em;
+    margin-bottom: 0.8em;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* Splash Section */
+.splash {
+    background-color: white;
+    padding-bottom: 8em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-image: url("/images/trees.png");
+    background-position: bottom;
+}
+
+.splash h1 {
+    text-align: center;
+    letter-spacing: 1.5em;
+    font-size: 2.5em;
+    font-weight: bold;
+    color: rgb(247, 180, 45);
+    text-shadow: 0em 0em 2px rgb(247, 180, 45);
+    align-self: flex-start;
+    background-color: black;
+    width: 100%;
+}
+
+.splash img {
+    border-style: none solid solid none;
+    border-width: 0.4em;
+    margin-bottom: -12em;
+    margin-right: 20em;
+    background-color: rgb(247, 180, 45);
+    animation-name: bob1;
+    animation-duration: 1.75s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+}
+
+.splash p {
+    font-size: 1.25em;
+    background-color: rgb(247, 180, 45);
+    margin-left: 20em;
+    font-size: 1.1em;
+    text-align: right;
+    border-style: none solid solid none;
+    border-width: 0.4em;
+    padding: 0.25em;
+    animation-name: bob1;
+      animation-duration: 2s;
+     animation-iteration-count: infinite;
+     animation-timing-function: ease-in-out;
+}
+
+.tagline {
+    font-size: 1.3em;
+}
+
+/* Horizontal Rules */
+hr {
+margin-top: 0px;
+   border-width: .25em;
+   border-style: solid;
+   color: black;
+   margin-bottom: 1em;
+}
+
+/* Sections */
+#past {
+    background-color: white;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5%;
+}
+
+#past section {
+    background-color: white;
+    width:45%;
+    border-style: none solid solid none;
+    border-width: 0.4em;
+    margin-bottom: 1em;
+}
+
+/* Section Headings */
+section h2:before {
+    content:"->";
+}
+
+
+#past section h2 {
+    margin-top: 0px;
+    background-color: black;
+    text-align: left;
+    padding-left: 1.5em;
+    text-shadow: 0em 0em 1.3px rgb(247, 180, 45);
+    letter-spacing: .45em;
+    color: rgb(247, 180, 45);
+}
+
+/* Paragraph Styles */
+
+section p {
+   padding-left: 1.2em;
+   padding-right: 1.2em;
+   font-weight: bold;
+   font-size: 1.2em;
+}
+
+
+/* link styles */
+section a {
+    color: rgb(247, 180, 45);
+    text-decoration: none;
+    transition-duration: 200ms;
+}
+section a:hover {
+    text-shadow: 0em 0em 8px rgb(247, 180, 45);
+    transition-duration: 200ms;
+}
+
+/* List Styles */
+ul {
+    list-style-type: square;
+    padding-left: 1.2em;
+    padding-right: 1.2em;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+dl {
+    display: grid;
+    grid-template-areas:
+    "date content";
+    grid-template-columns: 4fr 2fr;
+    background-color: white;
+    gap: 1em;
+    padding-left: 1.2em;
+    padding-right: 1.2em;
+    font-weight: bold;
+    
+}
+dl dt{
+    font-size: 1.2em;
+}
+dl dd{
+    font-size: 0.9em;
+}
+
+.proj {
+    background-image: url("/images/trees2.png");
+    background-position: top;
+    border-style: solid none none none;
+    border-width: 0.4em;
+    margin-top: 0px;
+}
+
+.proj h2 {
+    background-color: black;
+    text-align: center;
+    text-shadow: 0em 0em 1.3px rgb(247, 180, 45);
+    letter-spacing: .45em;
+    color: rgb(247, 180, 45);
+    font-size: 1.75em;
+}
+
+/* Project Section */
+.three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    justify-content: center;
+    margin-left: 1em;
+    margin-right: 1em;
+    padding-bottom: 1em;
+    
+}
+
+.card {
+    background-color: white;
+    border-style: none solid solid none;
+    border-width: 0.4em;
+    display: flex;
+    flex-direction: column;
+}
+
+.card img {
+    background-color: rgb(247, 180, 45);
+    margin: 1.5em auto;
+}
+
+.card h3 {
+    margin-left: 1em;
+    margin-top: 0px;
+    letter-spacing: .2em;
+    font-size: 1.2em;
+    text-shadow: 0em 0em 1.3px black;
+}
+
+/* Contact Page Styles */
+.one-col {
+    background-color: black;
+    color: white;
+    font-size: 1.5em;
+}
+
+form {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    padding: 2em;
+}
+
+form input, form textarea {
+    background-color: white;
+    color: black
+}
+
+form input:focus, form textarea:focus {
+    color: black
+}
+
+form button {
+    background-color:rgb(247, 180, 45);
+}
+
+form button:hover {
+    background-color: white;
+}
+
+.sillycat {
+    margin-top: 2em;
+    margin-left: calc(50% - 50px);
+    margin-bottom: 2em;
+}
