@@ -78,7 +78,7 @@ footer a:hover {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-image: url("/images/trees.png");
+    background-image: url("/cv/images/trees.png");
     background-position: bottom;
 }
 
@@ -217,7 +217,7 @@ dl dd{
 }
 
 .proj {
-    background-image: url("/images/trees2.png");
+    background-image: url("/cv/images/trees2.png");
     background-position: top;
     border-style: solid none none none;
     border-width: 0.4em;
