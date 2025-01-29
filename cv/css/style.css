@@ -1,5 +1,5 @@
-@font-face { font-family: myfont; src: url('/istolethisfont.woff'); }
-@font-face { font-family: myfont2; src: url('/istolethisonetoo.ttf'); }
+@font-face { font-family: myfont; src: url('/cv/istolethisfont.woff'); }
+@font-face { font-family: myfont2; src: url('/cv/istolethisonetoo.ttf'); }
 
 @keyframes bob1 {
     0%   {transform: translate(0.25em,0px);}
