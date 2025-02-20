@@ -26,10 +26,13 @@
     <tr>
       <td width="600px" style="vertical-align: center;">
         <br>
+        
         <div id="haiku">.</div>
         <br>
-        &#9829;&#9829;
-        <br>
+        <div class="zuish">
+        <div id="haiku2">.</div>
+        <div id="haiku3">.</div>
+        </div>
         <br>
         <details open>
         <summary>
@@ -570,4 +573,18 @@
   console.log(s);
   document.getElementById("haiku").innerHTML = r + " since " + s + "!";
   
+  let c = [
+    "soon",
+    "loved",
+    "diy",
+  ];
+  let d = [
+    "coming stuff new",
+    "you are special you are",
+    "forever and always",
+  ];
+  let k = Math.floor(Math.random() * c.length);
+  
+  document.getElementById("haiku3").innerHTML = d[k];
+  document.getElementById("haiku2").innerHTML = c[k] + "<div id='heart'>&#9829; </div>";
 </script>

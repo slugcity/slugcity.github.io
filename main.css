@@ -1,4 +1,5 @@
 @font-face { font-family: myfont; src: url('myfont2.woff'); }
+@font-face { font-family: zuish; src: url('zuish.ttf'); }
 
 *   {
   font-family: myfont;
@@ -10,7 +11,6 @@ background-color: #ffffff;
 line-height: 1;
 letter-spacing: .5px;
 font-size: 18px;
-
 }
 
 #main1{
@@ -26,6 +26,24 @@ font-size: 18px;
   transform: translate(-50%,0);
   display: flex;
   overflow: clip;
+}
+
+#haiku2 {
+  font-family: zuish;
+}
+#haiku3 {
+  font-family: zuish;
+}
+
+div.zuish {
+  text-orientation: upright;
+  writing-mode: vertical-lr;
+  line-height:14px;
+  letter-spacing: 3px;
+}
+
+#heart {
+  display: inline;
 }
 
 #mainimg{
