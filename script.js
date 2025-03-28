@@ -25,7 +25,7 @@ function enterText() {
   //get text value
   var x = document.getElementById("text-input").value;
   // Create element:
-  printLine(userPrefix + x);
+  printRedLine(userPrefix + x);
   getResponse(x);
   //clear textbox
   document.getElementById('text-input').value = "";
@@ -33,7 +33,7 @@ function enterText() {
 }
 
 function getResponse(x) {
-  document.getElementById("backtext").style.animationName = "fadeout";
+  //document.getElementById("backtext").style.animationName = "fadeout";
   if ((x.trim() == 'y' || x.trim() == 'yeah' || x.trim() == 'yes' || x.trim() == 'duh' || x.trim() == 'yea') && mode != "terminal") {
 
     if (mode == "exit") {
@@ -293,6 +293,14 @@ para.id = "reverse";
 // Append to another element:
 document.getElementById("terminal-output").appendChild(para);
 }
+
+function printRedLine(line) {
+  const para = document.createElement("p");
+  para.innerHTML = line;
+  para.id = "red";
+  // Append to another element:
+  document.getElementById("terminal-output").appendChild(para);
+  }
 
 function printLink(line, link) {
   const para = document.createElement("a");
