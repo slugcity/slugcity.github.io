@@ -90,6 +90,7 @@ function getResponse(x) {
     printLine("&nbsp;");
     printLine("This is a list of every project I've worked on.");
     printRevLine("[NAME]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[TYPE]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[COMPLETION DATE]");
+    printLine("Iterum ................. ALBUM ...... 04.09.25");
     printLine("lostmedia1 ............. ALBUM ...... 03.09.25");
     printLine("DOTO ................... GAME ....... __.__.__ (I)");
     printLine("Untitled Text Editor* .. APP ........ 02.18.25 (U)");
