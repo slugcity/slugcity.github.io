@@ -88,6 +88,7 @@
         scroll-padding-top: calc(max(150px, calc(50vh - 6em)));
         box-sizing: border-box;
         scroll-snap-type: y mandatory;
+        will-change: transform;
     }
     #highlight {
         background-color: white;
@@ -1170,25 +1171,23 @@
                                     wrapper.appendChild(iframe);
                                     wrapper.appendChild(controls);
                                     const reveal = document.createElement('div');
-                                    reveal.style.cssText = 'overflow:hidden; max-height:0; transition:max-height 0.4s ease;';
+                                    reveal.style.cssText = 'opacity:0; transform:translateY(-10px); transition:opacity 0.35s ease, transform 0.35s ease;';
                                     reveal.appendChild(wrapper);
                                     playLink.parentNode.replaceWith(reveal);
                                     requestAnimationFrame(() => requestAnimationFrame(() => {
-                                        reveal.style.maxHeight = '700px';
+                                        reveal.style.opacity = '1';
+                                        reveal.style.transform = 'translateY(0)';
                                     }));
 
-                                    const origC2Filter = canvas2.style.filter;
-                                    canvas.style.transition = 'filter 0.4s';
-                                    canvas2.style.transition = 'filter 0.4s';
-                                    canvas.style.filter = 'blur(4px) brightness(0.75)';
-                                    canvas2.style.filter = origC2Filter + ' blur(4px)';
-
+                                    const overlay = document.createElement('div');
+                                    overlay.style.cssText = 'position:absolute; inset:0; background:rgba(0,0,0,0.5); opacity:0; transition:opacity 0.4s; pointer-events:none; z-index:5;';
+                                    container.appendChild(overlay);
+                                    requestAnimationFrame(() => requestAnimationFrame(() => { overlay.style.opacity = '1'; }));
 
                                     document.addEventListener('visibilitychange', function onVis() {
                                         if (!wrapper.isConnected) { document.removeEventListener('visibilitychange', onVis); return; }
                                         if (document.visibilityState === 'visible') {
-                                            canvas.style.filter = '';
-                                            canvas2.style.filter = origC2Filter;
+                                            overlay.style.opacity = '0';
                                             bgSpeed = 1;
                                         }
                                     });
@@ -1467,18 +1466,22 @@
                                     wrapper.appendChild(iframe);
                                     wrapper.appendChild(controls);
                                     const reveal = document.createElement('div');
-                                    reveal.style.cssText = 'overflow:hidden; max-height:0; transition:max-height 0.4s ease;';
+                                    reveal.style.cssText = 'opacity:0; transform:translateY(-10px); transition:opacity 0.35s ease, transform 0.35s ease;';
                                     reveal.appendChild(wrapper);
                                     playLink.parentNode.replaceWith(reveal);
                                     requestAnimationFrame(() => requestAnimationFrame(() => {
-                                        reveal.style.maxHeight = '700px';
+                                        reveal.style.opacity = '1';
+                                        reveal.style.transform = 'translateY(0)';
                                     }));
 
-                                    canvas.style.transition = 'filter 0.4s';
-                                    canvas.style.filter = 'blur(4px) brightness(0.75)';
+                                    const overlay = document.createElement('div');
+                                    overlay.style.cssText = 'position:absolute; inset:0; background:rgba(0,0,0,0.5); opacity:0; transition:opacity 0.4s; pointer-events:none; z-index:1;';
+                                    container.appendChild(overlay);
+                                    requestAnimationFrame(() => requestAnimationFrame(() => { overlay.style.opacity = '1'; }));
+
                                     document.addEventListener('visibilitychange', function onVis() {
                                         if (!wrapper.isConnected) { document.removeEventListener('visibilitychange', onVis); return; }
-                                        if (document.visibilityState === 'visible') canvas.style.filter = '';
+                                        if (document.visibilityState === 'visible') overlay.style.opacity = '0';
                                     });
                                 });
                             }
