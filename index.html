@@ -1733,6 +1733,13 @@
     function renderAlbum(albumKey) {
         contentArea.classList.remove('center-view');
         sidebar.classList.remove('divider');
+        contentArea.style.backgroundColor = '';
+        contentArea.style.backgroundImage = '';
+        contentArea.style.backgroundSize = '';
+        contentArea.style.backgroundPosition = '';
+        contentArea.style.backgroundRepeat = '';
+        contentArea.style.position = '';
+        contentArea.style.display = '';
         if (isMobile()) {
             contentArea.style.scrollSnapType   = 'none';
             contentArea.style.paddingTop       = '';
@@ -1813,6 +1820,13 @@
         setHamburgerOpen(false);
 
         if (albums[proj]) {
+            contentArea.style.backgroundColor = '';
+            contentArea.style.backgroundImage = '';
+            contentArea.style.backgroundSize = '';
+            contentArea.style.backgroundPosition = '';
+            contentArea.style.backgroundRepeat = '';
+            contentArea.style.position = '';
+            contentArea.style.display = '';
             renderAlbum(proj);
         } else {
             contentArea.classList.remove('center-view');
