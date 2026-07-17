@@ -1158,9 +1158,10 @@
                             const playLink = p.querySelector('a[href*="picocraft.html"]');
                             if (playLink) {
                                 playLink.addEventListener('click', (e) => {
+                                    if (window.innerWidth <= 768) return;
                                     e.preventDefault();
                                     const iframe = document.createElement('iframe');
-                                    iframe.src = 'games/picocraft/play/picocraft.html';
+                                    iframe.src = 'play/picocraft/picocraft.html';
                                     iframe.scrolling = 'no';
                                     iframe.style.cssText = 'display:block; width:100%; aspect-ratio:1/1; border:none; overflow:hidden;';
                                     const controls = document.createElement('div');
@@ -1453,9 +1454,10 @@
                             const playLink = p.querySelector('a[href*="redrock.html"]');
                             if (playLink) {
                                 playLink.addEventListener('click', (e) => {
+                                    if (window.innerWidth <= 768) return;
                                     e.preventDefault();
                                     const iframe = document.createElement('iframe');
-                                    iframe.src = 'games/redrock/redrock.html';
+                                    iframe.src = 'play/redrock/redrock.html';
                                     iframe.scrolling = 'no';
                                     iframe.style.cssText = 'display:block; width:100%; aspect-ratio:1/1; border:none; overflow:hidden;';
                                     const wrapper = document.createElement('div');

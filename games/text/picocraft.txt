@@ -6,6 +6,6 @@ i made this purely to see if i could. after making my last game, i was significa
 
 i made this before i learned about drawing to different screens so it's horribly unoptimized. it's a cute toy to mess around with though :)
 
-<div class="mobile-center"><a href="games/picocraft/play/picocraft.html" target="_blank" class="play-now-btn" style="color:white; background:rgba(0,0,0,0.5); padding:6px 18px; font-size:18px; text-decoration:none; display:inline-block;">play now!</a></div>
+<div class="mobile-center"><a href="play/picocraft/picocraft.html" target="_blank" class="play-now-btn" style="color:white; background:rgba(0,0,0,0.5); padding:6px 18px; font-size:18px; text-decoration:none; display:inline-block;">play now!</a></div>
 
 <a href="https://olliesharddrive.com/games/picocraft/picocraft_win.zip" target="_blank" style="color:white">download (win)</a> &nbsp; <a href="https://olliesharddrive.com/games/picocraft/picocraft_mac.zip" target="_blank" style="color:white">download (mac)</a> &nbsp; <a href="https://olliesharddrive.com/games/picocraft/picocraft_linux.zip" target="_blank" style="color:white">download (linux)</a>
