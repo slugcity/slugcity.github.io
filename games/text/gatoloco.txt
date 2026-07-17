@@ -1,0 +1,13 @@
+<img src="games/images/gatoloco.png" style="display:block; width:100%; height:auto; max-width:600px;">
+A GAME ABOUT BIG JUMPS, BIG SCORES, AND BIG EXPLOSIONS!
+02.02.25
+
+The mischievous foxes are up to no good! Put them in their place, but make sure not to let the power go out. Use rockets to explode enemies or launch yourself all over the place in this hectic high-score chaser.
+
+i submitted this game to the bigmode 2025 game jam. the theme was "power" so i made a little arcade action-platformer where the player has to collect energy bolts. i learned a ton about platformer game collision/smooth movement!
+
+gato loco placed in the top 25 "most fun submissions" out of 818 total entries!
+
+<a href="https://olliesharddrive.itch.io/gato-loco" target="_blank" style="color:white; background:#d97030; padding:6px 18px; border-radius:3px; text-decoration:none; display:inline-flex; align-items:center; vertical-align:middle;">download now</a> <span style="color:rgba(220,170,60,0.75); vertical-align:middle;">on itch.io <img src="games/gatoloco/windowsicon.png" class="inline-icon" style="width:19px; height:19px; vertical-align:middle; opacity:0.65; margin-left:4px; filter:brightness(0.92);"></span>
+
+<br>

@@ -1,0 +1,17 @@
+
+how low can you go?
+10-17-24
+
+
+
+downit is a brutal, one-handed roguelike dungeon crawler:
+
+every move counts- swipe to navigate fight and break a path toward the key and then exit:randomized layouts mean no two runs are the same:
+
+
+
+downit started as a remake of my game teeny dungeon:rebuilding from the ground up meant a sturdier engine and room for far more intricate systems than the original could ever hold:
+
+the result broke the top 10 on apples most paid apps chart and landed a feature on apples games page:
+
+

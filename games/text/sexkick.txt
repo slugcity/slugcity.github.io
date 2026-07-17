@@ -1,0 +1,8 @@
+<br>not the worst fighting game ever made!
+09.11.21
+
+i made this as i was starting to get familiar with pico-8. the characters are inspired by the ones from the jelpi demo included with the software.
+
+sexkick is a pretty cute, simple game. it's also really fun with friends!
+
+<a href="https://olliesharddrive.com/games/sexkick/sexkick_win.zip" target="_blank" style="color:white">download (win)</a> &nbsp; <a href="https://olliesharddrive.com/games/sexkick/sexkick_mac.zip" target="_blank" style="color:white">download (mac)</a> &nbsp; <a href="https://olliesharddrive.com/games/sexkick/sexkick_linux.zip" target="_blank" style="color:white">download (linux)</a>

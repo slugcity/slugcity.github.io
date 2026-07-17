@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 950 950">
+  <defs>
+    <clipPath id="inner-ring">
+      <circle cx="475" cy="475" r="374"/>
+    </clipPath>
+  </defs>
+
+  <!-- Ring (annulus, even-odd) -->
+  <path fill="white" fill-rule="evenodd"
+        d="M 950,475 A 475,475 0 1,0 0,475 A 475,475 0 1,0 950,475 Z
+           M 849,475 A 374,374 0 1,1 101,475 A 374,374 0 1,1 849,475 Z"/>
+
+  <!-- Diagonal arm clipped to ring interior -->
+  <path fill="white" clip-path="url(#inner-ring)"
+        d="M 731,430
+           L 742,440 754,460 765,480 776,500 775,520
+             740,540 708,560 673,580 639,600 605,620
+             572,640 538,660 504,680 470,700
+             300,800 130,900 -60,1000
+           L -260,1000
+           L -62,900 108,800 278,700
+             312,680 346,660 380,640 414,620
+             448,600 482,580 516,560 550,540 583,520
+             617,500 652,480 685,460 719,440
+           Z"/>
+
+  <!-- Center dot -->
+  <circle cx="473" cy="480" r="50" fill="white"/>
+</svg>

@@ -1,0 +1,7 @@
+teeny dungeon &nbsp;&nbsp;//&nbsp;&nbsp; 04.07.23
+
+tiny roguelike made in love
+
+i made this in about a week just to see if i could! i was inspired by the art style of bitsy and the tower, which are both very similar. there's something about minimalism in pixel art that scratches an itch in my brain.
+
+<a href="https://apps.apple.com/us/app/teeny-dungeon/id6447354230" target="_blank"><img src="games/appstore.svg" class="appstore-badge" alt="Download on the App Store"></a>

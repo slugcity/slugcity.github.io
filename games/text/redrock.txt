@@ -1,0 +1,9 @@
+redrock &nbsp;&nbsp;//&nbsp;&nbsp; 11.14.18
+
+by will, ian, and grey
+
+we made / submitted redrock to the metroidvania month 2 game jam as a school project. we didn't do too hot but this was our first experience making a game. we learned the labor that goes into making a game from start to finish and had a ton of fun doing it!
+
+<div class="mobile-center"><a href="games/redrock/redrock.html" target="_blank" class="play-now-btn" style="color:white; background:#5F574F; padding:6px 18px; font-size:18px; text-decoration:none; display:inline-block; text-shadow:0px 2px 3px rgba(0,0,0,0.3);">play now!</a></div>
+
+<a href="https://olliesharddrive.com/games/redrock/redrock_win.zip" target="_blank" style="color:white">download (win)</a> &nbsp; <a href="https://olliesharddrive.com/games/redrock/redrock_mac.zip" target="_blank" style="color:white">download (mac)</a> &nbsp; <a href="https://olliesharddrive.com/games/redrock/redrock_linux.zip" target="_blank" style="color:white">download (linux)</a>

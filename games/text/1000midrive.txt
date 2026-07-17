@@ -1,0 +1,7 @@
+07.06.20
+
+desert bus remade in pico-8
+
+this "game" is mostly a joke. it's based on the desert bus game from penn & teller's smoke and mirrors where you have to drive a bus down a straight highway for 8 hours real time. it's not fun so don't play it. if you can beat it, send me a screenshot.
+
+<a href="https://olliesharddrive.com/games/1000midrive/1000midrive_win.zip" target="_blank" style="color:white">download (win)</a> &nbsp; <a href="https://olliesharddrive.com/games/1000midrive/1000midrive_mac.zip" target="_blank" style="color:white">download (mac)</a> &nbsp; <a href="https://olliesharddrive.com/games/1000midrive/1000midrive_linux.zip" target="_blank" style="color:white">download (linux)</a>

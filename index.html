@@ -1,0 +1,1894 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>olliesharddrive.com</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="preload" as="image" href="me.jpg">
+<style>
+    @font-face {
+    font-family: font1;
+    src: url(AlteHaasGrotesk-Regular.woff);
+    }
+    @font-face {
+    font-family: nahwc-font;
+    src: url(games/nahwc/imadethismyself-3.ttf);
+    }
+    @font-face {
+    font-family: pico-font;
+    src: url(games/picocraft/pico-8.ttf);
+    }
+    @font-face {
+    font-family: gato-font;
+    src: url(games/gatoloco/gatofont.woff2) format('woff2');
+    }
+    html {
+        overflow-x: hidden;
+    }
+    body {
+        font-family: font1;
+        margin: 0px;
+        color: white;
+        background-color: black;
+        font-variant-ligatures: none;
+    }
+    p {
+        margin: 0px;
+        font-size: 21px;
+    }
+    .spread {
+        width: 100%;
+        margin-top: 0vh;
+        height: 100vh;
+        background-color: black;
+        display: flex;
+        flex-direction: row;
+    }
+    .sidebar {
+        background-color: black;
+        height: 100vh;
+        width: 350px;
+        flex-shrink: 0;
+        overflow: visible;
+        position: relative;
+        z-index: 1;
+    }
+    .info {
+        height: max(150px, calc(50vh - 6em));
+        padding-top: 14px;
+        padding-left: 14px;
+        box-sizing: border-box;
+    }
+    .menubar {
+        display: flex;
+        flex-direction: row;
+        padding-bottom: 4px;
+        white-space: nowrap;
+    }
+    .filesystem {
+        width: 350px;
+        height: calc(50vh + 6em);
+        display: flex;
+        background-color: black;
+        padding-left: 14px;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+    .foldercolumn {
+        width: 175px;
+        height: 100%;
+    }
+    .content {
+        background-color: black;
+        height: 100%;
+        width: calc(100vw - 350px);
+        overflow-y: auto;
+        padding-right: 14px;
+        padding-top: calc(max(150px, calc(50vh - 6em)));
+        scroll-padding-top: calc(max(150px, calc(50vh - 6em)));
+        box-sizing: border-box;
+        scroll-snap-type: y mandatory;
+    }
+    #highlight {
+        background-color: white;
+        color: black;
+        padding: 0 5px;
+    }
+    #highlight:hover, #mobile-highlight:hover { text-decoration: underline !important; text-decoration-color: black; }
+
+    .selection {
+        padding-top: 1px;
+        padding-bottom: 1px;
+        padding-left: 5px;
+        padding-right: 6px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        line-height: 1;
+    }
+    .selection::after {
+        content: '';
+        display: block;
+        flex-shrink: 0;
+        width: 0;
+        height: 0;
+        border-top: 6px solid transparent;
+        border-bottom: 6px solid transparent;
+        border-left: 11px solid white;
+        visibility: hidden;
+    }
+    .selection:hover::after {
+        visibility: visible;
+    }
+    .selection.active {
+        background-color: white;
+        color: black;
+    }
+    .selection.active:hover::after {
+        border-left-color: black;
+    }
+    .song-item {
+        padding-top: 1px;
+        padding-bottom: 1px;
+        padding-left: 5px;
+        cursor: pointer;
+        display: flex;
+        align-items: flex-end;
+        gap: 5px;
+        scroll-snap-align: start;
+        line-height: 1;
+    }
+    .content > p:not(.song-item) {
+        line-height: 1;
+        padding-top: 1px;
+    }
+    .song-title {
+        flex: 0 1 auto;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        min-width: 0;
+    }
+    .song-item:hover .song-title {
+        text-decoration: underline;
+    }
+    .song-item.active {
+        background-color: white;
+        color: black;
+    }
+    .song-duration {
+        flex-shrink: 0;
+        font-size: 18px;
+        color: rgba(255,255,255,0.5);
+    }
+    .song-item.active .song-duration {
+        color: rgba(0,0,0,0.5);
+    }
+    .album-cover {
+        display: none;
+        width: 45%;
+        max-width: 220px;
+        height: auto;
+        padding: 0 0 14px 5px;
+    }
+    #audioplayercontainer {
+        margin-top: 20px;
+        padding-right: 14px;
+        user-select: none;
+    }
+    #seekbar {
+        position: relative;
+        height: 14px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        width: 100%;
+    }
+    #track-line {
+        position: absolute;
+        width: 100%;
+        height: 1px;
+        background-color: rgba(255,255,255,0.5);
+    }
+    #seek-thumb {
+        position: absolute;
+        width: 7px;
+        height: 7px;
+        background-color: white;
+        border-radius: 50%;
+        left: 0%;
+        transform: translateX(-50%);
+        pointer-events: none;
+    }
+    #player-times {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        color: rgba(255,255,255,0.45);
+        margin-top: 1px;
+    }
+    #play-pause-btn {
+        margin-top: 4px;
+        cursor: pointer;
+        color: white;
+        display: inline-block;
+    }
+    #play-pause-btn:hover {
+        color: white;
+    }
+    .playertext {
+        display: flex;
+        margin-top: 3px;
+    }
+    .playertext p:hover { text-decoration: underline; }
+    .sidebar.divider { border-right: 1px solid rgba(255,255,255,0.18); }
+    .content.center-view {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-left: 10vw;
+        padding-right: 10vw;
+    }
+    .content::-webkit-scrollbar {
+        width: 6px;
+    }
+    .content::-webkit-scrollbar-track {
+        background: black;
+    }
+    .content::-webkit-scrollbar-thumb {
+        background: white;
+    }
+    .content::-webkit-scrollbar-thumb:hover {
+        background: rgba(255,255,255,0.6);
+    }
+
+    /* ─── Mobile elements (hidden on desktop) ─── */
+    #mobile-header {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        background: black;
+        z-index: 100;
+        padding: 10px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        box-sizing: border-box;
+        border-bottom: 1px solid rgba(255,255,255,0.18);
+    }
+    #mobile-header-left {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        flex: 1;
+        min-width: 0;
+    }
+    #mobile-path-wrap {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        overflow: hidden;
+        min-width: 0;
+        white-space: nowrap;
+    }
+    #mobile-path {
+        font-size: 21px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    #hamburger-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        flex-shrink: 0;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: visible;
+    }
+    #hamburger-icon, #close-icon {
+        display: block;
+    }
+    #mobile-highlight {
+        background-color: white;
+        color: black;
+        padding: 0 5px;
+        text-decoration: none;
+    }
+    /* nav: grid trick for smooth exact-height animation */
+    #mobile-nav {
+        display: none;
+        grid-template-rows: 0fr;
+        flex-shrink: 0;
+        width: 100%;
+        background: black;
+        transition: grid-template-rows 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    #mobile-nav.open { grid-template-rows: 1fr; }
+    #mobile-nav-inner {
+        overflow: hidden;
+        padding: 8px 12px 6px;
+        box-sizing: border-box;
+        border-bottom: 1px solid rgba(255,255,255,0.15);
+    }
+    .mob-acc-cat {
+        padding: 9px 6px 9px 5px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        line-height: 1;
+    }
+    .mob-acc-cat::after {
+        content: '';
+        display: block;
+        flex-shrink: 0;
+        width: 0; height: 0;
+        border-top: 6px solid transparent;
+        border-bottom: 6px solid transparent;
+        border-left: 11px solid white;
+        transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .mob-acc-cat.open::after { transform: rotate(90deg); }
+    /* accordion content: same grid trick */
+    .mob-acc-wrap {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .mob-acc-wrap.open { grid-template-rows: 1fr; }
+    .mob-acc-inner {
+        overflow: hidden;
+        padding-left: 14px;
+    }
+    .mob-acc-inner .selection {
+        padding-top: 9px;
+        padding-bottom: 9px;
+    }
+    .mob-acc-inner .selection::after { display: none; }
+    #mobile-player {
+        display: none;
+        position: fixed;
+        bottom: 0; left: 0; right: 0;
+        background: black;
+        z-index: 100;
+        padding: 12px 16px 40px;
+        flex-direction: column;
+        gap: 3px;
+        user-select: none;
+        box-sizing: border-box;
+    }
+    #mobile-seekbar {
+        position: relative;
+        height: 22px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
+    #mobile-track-line {
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        background-color: rgba(255,255,255,0.5);
+    }
+    #mobile-seek-thumb {
+        position: absolute;
+        width: 11px;
+        height: 11px;
+        background-color: white;
+        border-radius: 50%;
+        left: 0%;
+        transform: translateX(-50%);
+        pointer-events: none;
+    }
+    #mobile-player-times {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        color: rgba(255,255,255,0.45);
+    }
+    #mobile-play-btn {
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        align-self: center;
+        margin-top: 8px;
+        width: 60px;
+        height: 60px;
+        border: 2px solid rgba(255,255,255,0.35);
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+    #mobile-play-btn svg { width: 28px; height: 32px; }
+    #mobile-play-icon { margin-left: 6px; }
+    #mobile-song-label:hover { text-decoration: underline; }
+    #mobile-song-label {
+        font-size: 21px;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin: 0;
+    }
+
+    .now-card { width: 30%; }
+    .appstore-badge { height: 50px; display: block; margin-top: 8px; }
+
+    .nahwc-img { width: 200px; height: auto; image-rendering: pixelated; }
+    .nahwc-imgs { display:flex; flex-direction:row; align-items:flex-start; width:100%; }
+
+    /* ─── Mobile layout ─── */
+    @media (max-width: 768px) {
+        .sidebar { display: none !important; }
+        .spread {
+            flex-direction: column !important;
+            padding-top: 65px !important;
+            box-sizing: border-box !important;
+        }
+        #mobile-nav { display: grid !important; }
+        .content {
+            display: block !important;
+            flex: 1 !important;
+            min-height: 0 !important;
+            height: auto !important;
+            width: 100vw !important;
+            padding-top: 28px !important;
+            padding-left: 14px !important;
+            padding-right: 14px !important;
+            padding-bottom: 200px !important;
+            scroll-padding-top: 0 !important;
+            scroll-snap-type: none !important;
+        }
+        #mobile-header { display: flex; }
+        #mobile-player { display: flex; }
+        .content { scrollbar-width: none !important; }
+        .content::-webkit-scrollbar { display: none !important; }
+        .song-item {
+            padding-top: 13px;
+            padding-bottom: 13px;
+            padding-right: 5px;
+            border-bottom: 1px solid rgba(255,255,255,0.12);
+        }
+        .song-title { flex: 1 !important; }
+        .album-cover { display: block !important; width: 100% !important; max-width: none !important; padding-left: 0 !important; padding-right: 0 !important; }
+        .content img:not(.album-cover):not(.now-card):not(.appstore-badge):not(.player-sprite):not(.nahwc-img):not(.inline-icon):not(.nahwc-award):not(.cover-img) { width: 100% !important; max-width: none !important; height: auto !important; padding-left: 0 !important; }
+        .nahwc-img { width: 50% !important; }
+        .sexkick-logo { display:block; margin-left:auto; margin-right:auto; padding-left:0 !important; }
+        .mobile-center { text-align:center !important; }
+        .picocraft-game { display:block !important; margin:0 auto !important; text-align:center !important; }
+        .play-now-btn { font-size:24px !important; padding:10px 28px !important; }
+
+        .nahwc-imgs { flex-direction: column !important; align-items: center !important; }
+        .nahwc-logo { order: -1; }
+        .nahwc-left-col { width: 100%; align-items: center; display: flex; flex-direction: column; }
+        .nahwc-award { position: static !important; width: 25% !important; display: block !important; margin: 10px auto 0 !important; }
+        .now-card { width: 75% !important; }
+        .appstore-badge { height: 70px !important; display: block !important; margin: 8px auto 0 !important; }
+        .cover-grid { display: block !important; }
+        .cover-grid > div { display: block !important; margin-bottom: 20px !important; }
+        .cover-img { width: 100% !important; height: auto !important; display: block !important; }
+    }
+</style>
+</head>
+<body>
+    <div class="spread">
+        <div class="sidebar">
+            <div class="info">
+                <div class="menubar">
+                    <img src="home.svg" height=18px style="margin-right: 1px;">
+                    <p style="font-size: 18px;" id="menubar-path">/</p>
+                </div>
+                <p style="display:flex; align-items:center; gap:6px;"><a href="index.html" id="highlight" style="text-decoration:none; color:black; cursor:pointer;">olliesharddrive.com</a><img src="logo.png" height="24px"></p>
+                <div id="audioplayercontainer">
+                    <audio id="audio" src="music/coolbeats/coolbeat1.mp3" preload="metadata"></audio>
+                    <div id="seekbar">
+                        <div id="track-line"></div>
+                        <div id="seek-thumb"></div>
+                    </div>
+                    <div id="player-times">
+                        <span id="current-time">0:00</span>
+                        <span id="remaining-time">-0:00</span>
+                    </div>
+                    <div class="playertext">
+                        <div id="play-pause-btn">
+                            <svg id="play-icon" viewBox="0 0 6 8" width="12" height="14" fill="currentColor"><polygon points="0,0 6,4 0,8"/></svg>
+                            <svg id="pause-icon" viewBox="0 0 7 8" width="12" height="14" fill="currentColor" style="display:none"><rect x="0" y="0" width="2.5" height="8"/><rect x="4.5" y="0" width="2.5" height="8"/></svg>
+                        </div>
+                        <p style="padding-left: 18px; font-size: 18px;">coolbeat1.mp3</p>
+                    </div>
+                </div>
+            </div>
+            <div class="filesystem">
+                <div class="foldercolumn" id="categorycolumn">
+                    <p class="selection" data-cat="about">about</p>
+                    <p class="selection" data-cat="games">games</p>
+                    <p class="selection" data-cat="music">music</p>
+                    <p class="selection" data-cat="design">design</p>
+                </div>
+                <div class="foldercolumn" id="projectcolumn"></div>
+            </div>
+        </div>
+        <div id="mobile-nav"><div id="mobile-nav-inner"></div></div>
+        <div class="content" id="contentarea"></div>
+    </div>
+
+    <!-- Mobile header -->
+    <div id="mobile-header">
+        <div id="mobile-header-left">
+            <div id="mobile-path-wrap">
+                <img src="home.svg" height="16px">
+                <span id="mobile-path">/</span>
+            </div>
+            <p style="display:flex; align-items:center; gap:6px;"><a href="index.html" id="mobile-highlight" style="text-decoration:none; color:black; cursor:pointer;">olliesharddrive.com</a><img src="logo.png" height="22px"></p>
+        </div>
+        <button id="hamburger-btn">
+            <svg id="hamburger-icon" viewBox="0 0 22 16" width="22" height="16" fill="white"><rect x="0" y="0" width="22" height="2"/><rect x="0" y="7" width="22" height="2"/><rect x="0" y="14" width="22" height="2"/></svg>
+            <svg id="close-icon" viewBox="0 0 18 18" width="18" height="18" fill="none" stroke="white" stroke-width="2" style="display:none"><line x1="0" y1="0" x2="18" y2="18"/><line x1="18" y1="0" x2="0" y2="18"/></svg>
+        </button>
+    </div>
+
+    <!-- Mobile audio player -->
+    <div id="mobile-player">
+        <p id="mobile-song-label">coolbeat1.mp3</p>
+        <div id="mobile-seekbar">
+            <div id="mobile-track-line"></div>
+            <div id="mobile-seek-thumb"></div>
+        </div>
+        <div id="mobile-player-times">
+            <span id="mobile-current-time">0:00</span>
+            <span id="mobile-remaining-time">-0:00</span>
+        </div>
+        <div id="mobile-play-btn">
+            <svg id="mobile-play-icon" viewBox="0 0 6 8" fill="white"><polygon points="0,0 6,4 0,8"/></svg>
+            <svg id="mobile-pause-icon" viewBox="0 0 7 8" fill="white" style="display:none"><rect x="0" y="0" width="2.5" height="8"/><rect x="4.5" y="0" width="2.5" height="8"/></svg>
+        </div>
+    </div>
+
+<script>
+(function() {
+    const audio             = document.getElementById('audio');
+    const thumb             = document.getElementById('seek-thumb');
+    const mobileThumb       = document.getElementById('mobile-seek-thumb');
+    const seekbar           = document.getElementById('seekbar');
+    const mobileSeekbar     = document.getElementById('mobile-seekbar');
+    const currentTimeEl     = document.getElementById('current-time');
+    const remainingEl       = document.getElementById('remaining-time');
+    const mobileCurrentTimeEl = document.getElementById('mobile-current-time');
+    const mobileRemainingEl   = document.getElementById('mobile-remaining-time');
+    const playBtn           = document.getElementById('play-pause-btn');
+    const playIcon          = document.getElementById('play-icon');
+    const pauseIcon         = document.getElementById('pause-icon');
+    const mobilePlayBtn     = document.getElementById('mobile-play-btn');
+    const mobilePlayIcon    = document.getElementById('mobile-play-icon');
+    const mobilePauseIcon   = document.getElementById('mobile-pause-icon');
+
+    function fmt(s) {
+        s = Math.floor(s) || 0;
+        return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2);
+    }
+
+    function updateUI() {
+        const pct = audio.duration ? audio.currentTime / audio.duration : 0;
+        const cur = fmt(audio.currentTime);
+        const rem = '-' + fmt((audio.duration || 0) - audio.currentTime);
+        thumb.style.left             = (pct * 100) + '%';
+        mobileThumb.style.left       = (pct * 100) + '%';
+        currentTimeEl.textContent    = cur;
+        remainingEl.textContent      = rem;
+        mobileCurrentTimeEl.textContent = cur;
+        mobileRemainingEl.textContent   = rem;
+    }
+
+    audio.addEventListener('timeupdate', updateUI);
+    audio.addEventListener('loadedmetadata', () => {
+        const rem = '-' + fmt(audio.duration);
+        remainingEl.textContent       = rem;
+        mobileRemainingEl.textContent = rem;
+    });
+    audio.addEventListener('play', () => {
+        playIcon.style.display        = 'none';
+        pauseIcon.style.display       = 'inline';
+        mobilePlayIcon.style.display  = 'none';
+        mobilePauseIcon.style.display = 'inline';
+    });
+    audio.addEventListener('pause', () => {
+        playIcon.style.display        = 'inline';
+        pauseIcon.style.display       = 'none';
+        mobilePlayIcon.style.display  = 'inline';
+        mobilePauseIcon.style.display = 'none';
+    });
+
+    playBtn.addEventListener('click', () => {
+        if (audio.paused) audio.play().catch(() => {});
+        else audio.pause();
+    });
+    mobilePlayBtn.addEventListener('click', () => {
+        if (audio.paused) audio.play().catch(() => {});
+        else audio.pause();
+    });
+
+    function seekTo(e) {
+        if (!audio.duration) return;
+        const rect = seekbar.getBoundingClientRect();
+        const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+        audio.currentTime = pct * audio.duration;
+    }
+
+    let dragging = false;
+    seekbar.addEventListener('mousedown', (e) => { dragging = true; seekTo(e); });
+    document.addEventListener('mousemove', (e) => { if (dragging) seekTo(e); });
+    document.addEventListener('mouseup', () => { dragging = false; });
+
+    function mobileSeekTo(clientX) {
+        if (!audio.duration) return;
+        const rect = mobileSeekbar.getBoundingClientRect();
+        const pct = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+        audio.currentTime = pct * audio.duration;
+    }
+
+    let mobileDragging = false;
+    mobileSeekbar.addEventListener('mousedown', (e) => { mobileDragging = true; mobileSeekTo(e.clientX); });
+    document.addEventListener('mousemove', (e) => { if (mobileDragging) mobileSeekTo(e.clientX); });
+    document.addEventListener('mouseup', () => { mobileDragging = false; });
+    mobileSeekbar.addEventListener('touchstart', (e) => { mobileSeekTo(e.touches[0].clientX); }, { passive: true });
+    mobileSeekbar.addEventListener('touchmove', (e) => { e.preventDefault(); mobileSeekTo(e.touches[0].clientX); }, { passive: false });
+})();
+
+(function() {
+    const fontImages = { '1': new Image(), '2': new Image(), '3': new Image() };
+    fontImages['1'].src = 'games/downit/font1.png';
+    fontImages['2'].src = 'games/downit/font2.png';
+    fontImages['3'].src = 'games/downit/font3.png';
+
+    const playerFrames = ['games/downit/player/one.png', 'games/downit/player/two.png', 'games/downit/player/three.png']
+        .map(src => { const img = new Image(); img.src = src; return img; });
+
+    function renderBitmapText(text, container, { fontKey = '1', scale = 1, width = null } = {}) {
+        const charset = " abcdefghijklmnopqrstuvwxyz0123456789:+()FSMHE-?";
+        const charW = 29, charH = 31, srcStride = 32, srcOffset = 3;
+        const scaledW = Math.round(charW * scale), scaledH = Math.round(charH * scale);
+        let currentFontImg = fontImages[fontKey];
+        let lastContentW = 0;
+
+        const cv = document.createElement('canvas');
+        cv.style.cssText = 'display:block; image-rendering:pixelated; image-rendering:crisp-edges;';
+
+        function draw(contentW) {
+            if (contentW !== undefined) lastContentW = contentW;
+            const maxW = Math.max(Math.floor(lastContentW) - 5, 200);
+            const rawLines = text.split('\n');
+            const allLines = [];
+            for (const raw of rawLines) {
+                if (!raw.trim()) { allLines.push(null); continue; }
+                const words = raw.split(' ');
+                let line = [], lineW = 0;
+                for (const word of words) {
+                    const wW = [...word].filter(c => charset.includes(c.toLowerCase())).length * scaledW;
+                    if (lineW > 0 && lineW + scaledW + wW > maxW) {
+                        allLines.push(line.join(''));
+                        line = [word]; lineW = wW;
+                    } else {
+                        if (lineW > 0) { line.push(' '); lineW += scaledW; }
+                        line.push(word); lineW += wW;
+                    }
+                }
+                if (line.length) allLines.push(line.join(''));
+            }
+            const blankH = Math.round(scaledH * 0.6);
+            const totalH = allLines.reduce((h, l) => h + (l === null ? blankH : scaledH), 0);
+            cv.width = maxW; cv.height = totalH || scaledH;
+            const ctx = cv.getContext('2d');
+            ctx.imageSmoothingEnabled = false;
+            let y = 0;
+            for (const line of allLines) {
+                if (line === null) { y += blankH; continue; }
+                let x = 0;
+                for (const ch of line) {
+                    const idx = charset.indexOf(ch.toLowerCase());
+                    if (idx >= 0) {
+                        ctx.drawImage(currentFontImg, srcOffset + idx * srcStride, 1, charW, charH, x, y, scaledW, scaledH);
+                        x += scaledW;
+                    }
+                }
+                y += scaledH;
+            }
+        }
+
+        if (width !== null) {
+            draw(width);
+        } else {
+            const cs = getComputedStyle(container);
+            draw(container.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight));
+            const ro = new ResizeObserver(entries => {
+                if (!cv.isConnected) { ro.disconnect(); return; }
+                draw(entries[0].contentRect.width);
+            });
+            ro.observe(container);
+        }
+        cv._redraw = (img) => { currentFontImg = img; draw(); };
+        return cv;
+    }
+
+    function gameContent(path) {
+        return (el) => {
+            const p = document.createElement('p');
+            p.style.paddingLeft = '5px';
+            fetch(path)
+                .then(r => r.text())
+                .then(t => { p.innerHTML = t.trim().replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>'); })
+                .catch(() => {});
+            el.appendChild(p);
+        };
+    }
+
+    const _bioImg = document.createElement('img');
+    _bioImg.src = 'me.jpg';
+    _bioImg.style.cssText = 'display:block; width:100%; height:auto; max-width:600px;';
+    const _bioPara = document.createElement('p');
+    _bioPara.style.cssText = 'padding-left:5px';
+    fetch('about/bio.txt')
+        .then(r => r.text())
+        .then(t => { _bioPara.innerHTML = '<br>' + t.trim().replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>'); })
+        .catch(() => { _bioPara.textContent = ''; });
+
+    const data = {
+        about:    {
+            projects: ['bio', 'now', 'lists'],
+            content: {
+                bio: (el) => { el.appendChild(_bioImg); el.appendChild(_bioPara); },
+                now: (el) => {
+                    const top = document.createElement('p');
+                    top.style.cssText = 'padding-left:5px; padding-bottom:14px;';
+                    fetch('about/now/top.txt').then(r => r.text()).then(t => { top.innerHTML = t.trim().replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>'); }).catch(() => {});
+                    el.appendChild(top);
+
+                    const N = 10;
+                    const carousel = document.createElement('div');
+                    carousel.style.cssText = 'display:flex; overflow-x:auto; scroll-snap-type:x mandatory; width:100%; scrollbar-width:none; gap:10px;';
+                    carousel.style.setProperty('-webkit-overflow-scrolling', 'touch');
+
+                    for (let set = 0; set < 3; set++) {
+                        for (let i = 1; i <= N; i++) {
+                            const img = document.createElement('img');
+                            img.src = 'about/now/cards/' + i + '.png';
+                            img.className = 'now-card';
+                            img.style.cssText = 'flex-shrink:0; height:auto; display:block; scroll-snap-align:center; border-radius:8px;';
+                            carousel.appendChild(img);
+                        }
+                    }
+
+                    const jumpTo = (idx) => {
+                        const child = carousel.children[idx];
+                        carousel.scrollTo({ left: child.offsetLeft - (carousel.offsetWidth - child.offsetWidth) / 2, behavior: 'instant' });
+                    };
+
+                    const startCard = N + Math.floor(N / 2);
+                    const firstImg = carousel.children[0];
+                    if (firstImg.complete) {
+                        requestAnimationFrame(() => jumpTo(startCard));
+                    } else {
+                        firstImg.addEventListener('load', () => requestAnimationFrame(() => jumpTo(startCard)));
+                    }
+
+                    const onScrollEnd = () => {
+                        const kids = [...carousel.children];
+                        const center = carousel.scrollLeft + carousel.offsetWidth / 2;
+                        const idx = kids.reduce((best, c, i) =>
+                            Math.abs(c.offsetLeft + c.offsetWidth / 2 - center) < Math.abs(kids[best].offsetLeft + kids[best].offsetWidth / 2 - center) ? i : best
+                        , 0);
+                        if (idx < N) jumpTo(idx + N);
+                        else if (idx >= N * 2) jumpTo(idx - N);
+                    };
+                    if ('onscrollend' in carousel) {
+                        carousel.addEventListener('scrollend', onScrollEnd);
+                    } else {
+                        let loopTimer;
+                        carousel.addEventListener('scroll', () => {
+                            clearTimeout(loopTimer);
+                            loopTimer = setTimeout(onScrollEnd, 80);
+                        });
+                    }
+
+                    el.appendChild(carousel);
+
+                    const bottom = document.createElement('p');
+                    bottom.style.cssText = 'padding-left:5px; padding-top:14px;';
+                    fetch('about/now/bottom.txt').then(r => r.text()).then(t => { bottom.innerHTML = t.trim().replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>'); }).catch(() => {});
+                    el.appendChild(bottom);
+                },
+                lists: `
+<p style="padding-left:5px">my top albums of all time (unordered, unfinished)</p>
+<p style="padding-left:5px; font-size:18px; color:rgba(255,255,255,0.5);">a quiet farwell, 2016-2018 (crater speak) - slauson malone<br>vergangenheitsbewältigung (crater speak) - slauson malone<br>by the time i get to phoenix - injury reserve<br>the most dear and the future - ear<br>saturation iii - brockhampton<br>saturation - brockhampton<br>minecraft - volume beta - c418<br>twin fantasy - car seat headrest<br>the unseen - quasimoto<br>vampire weekend - vampire weekend<br>madvillainy - madvillain</p>
+<p style="padding-left:5px; padding-top:14px">video games everyone should play at least once</p>
+<p style="padding-left:5px; font-size:18px; color:rgba(255,255,255,0.5);">minecraft 1.7.10 modded<br>fez<br>terraria<br>nuclear throne<br>portal 2<br>borderlands 2<br>lego star wars: the complete saga<br>balatro<br>team fortress 2</p>
+`.trim()
+            }
+        },
+        games:    {
+            projects: ['gato loco', 'DOWNIT', 'nahwc', 'teeny dungeon', 'picocraft', 'redrock'],
+            content: {
+                'gato loco': (container) => {
+                    container.style.backgroundImage = "url('games/gatoloco/construction.png')";
+                    container.style.backgroundSize = 'cover';
+                    container.style.backgroundPosition = 'center';
+                    container.style.backgroundRepeat = 'no-repeat';
+                    const p = document.createElement('p');
+                    p.style.cssText = 'padding-left:5px; font-family:gato-font; font-size:18px; line-height:1.6; letter-spacing:-1px; color:#f5a623; text-shadow:0 1px 4px rgba(0,0,0,0.2);';
+                    fetch('games/text/gatoloco.txt')
+                        .then(r => r.text())
+                        .then(t => {
+                            p.innerHTML = t.trim().replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>');
+                            function wrapChars(node) {
+                                if (node.nodeType === Node.TEXT_NODE) {
+                                    const frag = document.createDocumentFragment();
+                                    const words = node.textContent.split(/( |\n)/);
+                                    for (const token of words) {
+                                        if (token === ' ' || token === '\n') {
+                                            frag.appendChild(document.createTextNode(token));
+                                        } else if (token.length > 0) {
+                                            const word = document.createElement('span');
+                                            word.style.cssText = 'display:inline-block; white-space:nowrap;';
+                                            for (const ch of token) {
+                                                const s = document.createElement('span');
+                                                s.style.cssText = 'display:inline-block;';
+                                                s.textContent = ch;
+                                                word.appendChild(s);
+                                            }
+                                            frag.appendChild(word);
+                                        }
+                                    }
+                                    node.parentNode.replaceChild(frag, node);
+                                } else if (node.nodeType === Node.ELEMENT_NODE && node.tagName !== 'A' && node.tagName !== 'IMG') {
+                                    for (const child of [...node.childNodes]) wrapChars(child);
+                                }
+                            }
+                            for (const child of [...p.childNodes]) wrapChars(child);
+
+                            const spans = [...p.querySelectorAll('span[style]')].filter(s => s.style.display === 'inline-block' && !s.style.whiteSpace);
+                            const logo = p.querySelector('img');
+                            const rots = [-1.5, -1, -0.5, 0, 0, 0.5, 1, 1.5];
+                            const offs = [-0.25, 0, 0, 0.25];
+                            const rand = (arr) => arr[Math.floor(Math.random() * arr.length)];
+                            const logoRots = [-0.08, -0.04, 0, 0, 0.04, 0.08];
+                            let logoClock = 0;
+                            const timer = setInterval(() => {
+                                if (!p.isConnected) { clearInterval(timer); return; }
+                                const count = Math.max(1, Math.floor(spans.length * 0.04));
+                                for (let i = 0; i < count; i++) {
+                                    const sp = spans[Math.floor(Math.random() * spans.length)];
+                                    sp.style.transform = `translate(${rand(offs)}px, ${rand(offs)}px) rotate(${rand(rots)}deg)`;
+                                }
+                                if (logo && ++logoClock % 2 === 0) logo.style.transform = `translate(${rand(offs)}px, ${rand(offs)}px) rotate(${rand(logoRots)}deg)`;
+                            }, 80);
+                        })
+                        .catch(() => {});
+                    container.appendChild(p);
+                },
+                'DOWNIT': (container) => {
+                    const darkColors = ['#060010', '#000810', '#0d0003', '#000d07', '#05000d', '#0d0400'];
+                    container.style.backgroundColor = darkColors[Math.floor(Math.random() * darkColors.length)];
+                    container.style.position = 'relative';
+
+                    const bgDiv = document.createElement('div');
+                    bgDiv.style.cssText = 'position:absolute; top:0; left:0; width:100%; overflow:hidden; pointer-events:none; z-index:0;';
+                    container.appendChild(bgDiv);
+
+                    const wrap = document.createElement('div');
+                    wrap.style.cssText = 'padding-left:5px; position:relative; z-index:2;';
+
+                    // Use wrap.offsetHeight (in-flow content only) to avoid bgDiv contributing to scrollHeight
+                    const syncBgH = () => {
+                        if (!wrap.isConnected) return;
+                        const cs = getComputedStyle(container);
+                        const h = wrap.offsetHeight + parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom);
+                        bgDiv.style.height = Math.max(h, window.innerHeight) + 'px';
+                    };
+                    const bgRo = new ResizeObserver(() => { if (!bgDiv.isConnected) { bgRo.disconnect(); return; } syncBgH(); });
+                    bgRo.observe(container);
+
+                    // 400%x400% CSS-background layers — covers up to 4:1 aspect ratio at any rotation
+                    const mkLayer = (src, opacity) => {
+                        const div = document.createElement('div');
+                        div.style.cssText = `position:absolute; width:400%; height:400%; top:-150%; left:-150%; background:url('${src}') repeat; background-size:auto; opacity:${opacity};`;
+                        bgDiv.appendChild(div);
+                        return div;
+                    };
+                    const backLayer    = mkLayer('games/downit/back.png',        0.10);
+                    const overlayLayer = mkLayer('games/downit/backoverlay.png', 0.35);
+                    const noiseLayer   = mkLayer('games/downit/noise.png',       0.35);
+                    const tilesLayer   = mkLayer('games/downit/tiles.png',       0.05);
+                    tilesLayer.style.backgroundSize = '1920px 1080px';
+                    tilesLayer.style.filter = 'blur(2px)';
+
+                    const rotations = [0, 90, 180, 270];
+                    const flips = ['', ' scaleX(-1)', ' scaleY(-1)', ' scale(-1,-1)'];
+                    const randT = () => `rotate(${rotations[Math.floor(Math.random()*4)]}deg)${flips[Math.floor(Math.random()*4)]}`;
+                    tilesLayer.style.transform = flips[Math.floor(Math.random() * flips.length)];
+
+                    const badge = document.createElement('a');
+                    badge.href = 'https://apps.apple.com/us/app/downit/id6736586174';
+                    badge.target = '_blank';
+                    badge.style.display = 'block';
+                    badge.style.marginTop = '20px';
+                    const badgeImg = document.createElement('img');
+                    badgeImg.src = 'games/appstore.svg';
+                    badgeImg.className = 'appstore-badge';
+                    badge.appendChild(badgeImg);
+
+                    const cycleKeys = ['1', '2', '3'];
+                    let ci = 0;
+                    let cvRef = null;
+                    let titleRef = null;
+                    let pressRefs = [];
+                    let pressDivRef = null;
+                    let badgeRef = null;
+                    let playerImg = null;
+                    let playerX = 0, playerY = 0, tiltTimeout = null, unblurTimeout = null;
+
+                    const STEP = 64;
+                    function onKey(e) {
+                        if (!playerImg || !bgDiv.isConnected) return;
+                        const dirs = { ArrowLeft: [-STEP, 0], ArrowRight: [STEP, 0], ArrowUp: [0, -STEP], ArrowDown: [0, STEP] };
+                        const d = dirs[e.key];
+                        if (!d) return;
+                        e.preventDefault();
+                        playerX += d[0];
+                        playerY += d[1];
+                        const randTilt = Math.random() < 0.5 ? -7 : 7;
+                        const tilt = e.key === 'ArrowLeft' ? 7 : e.key === 'ArrowRight' ? -7 : randTilt;
+                        clearTimeout(tiltTimeout);
+                        playerImg.style.transition = 'transform 0.08s ease-out, filter 1s ease, opacity 1s ease';
+                        playerImg.style.transform = `translate(${playerX}px, ${playerY}px) rotate(${tilt}deg)`;
+                        tiltTimeout = setTimeout(() => {
+                            playerImg.style.transition = 'transform 0.18s ease-out, filter 1s ease, opacity 1s ease';
+                            playerImg.style.transform = `translate(${playerX}px, ${playerY}px) rotate(0deg)`;
+                        }, 80);
+                        if (cvRef) { cvRef.style.filter = 'blur(3px)'; cvRef.style.opacity = '0.5'; }
+                        if (titleRef) { titleRef.style.filter = 'blur(3px)'; titleRef.style.opacity = '0.5'; }
+                        if (pressDivRef) { pressDivRef.style.filter = 'blur(3px)'; pressDivRef.style.opacity = '0.5'; }
+                        if (badgeRef) { badgeRef.style.filter = 'blur(3px)'; badgeRef.style.opacity = '0.5'; }
+                        if (playerImg) { playerImg.style.filter = ''; playerImg.style.opacity = ''; }
+                        clearTimeout(unblurTimeout);
+                        unblurTimeout = setTimeout(() => {
+                            if (cvRef) { cvRef.style.filter = ''; cvRef.style.opacity = ''; }
+                            if (titleRef) { titleRef.style.filter = ''; titleRef.style.opacity = ''; }
+                            if (pressDivRef) { pressDivRef.style.filter = ''; pressDivRef.style.opacity = ''; }
+                            if (badgeRef) { badgeRef.style.filter = ''; badgeRef.style.opacity = ''; }
+                            if (playerImg) { playerImg.style.filter = 'blur(3px)'; playerImg.style.opacity = '0.15'; }
+                        }, 600);
+                    }
+                    document.addEventListener('keydown', onKey);
+
+                    const timer = setInterval(() => {
+                        if (!bgDiv.isConnected) { clearInterval(timer); document.removeEventListener('keydown', onKey); if (window._downitSyncPlayerSize) { window.removeEventListener('resize', window._downitSyncPlayerSize); delete window._downitSyncPlayerSize; } return; }
+                        backLayer.style.transform    = randT();
+                        overlayLayer.style.transform = randT();
+                        noiseLayer.style.transform   = randT();
+                        ci = (ci + 1) % cycleKeys.length;
+                        const fi = fontImages[cycleKeys[ci]];
+                        if (fi.complete) {
+                            if (cvRef) cvRef._redraw(fi);
+                            if (titleRef) titleRef._redraw(fi);
+                            pressRefs.forEach(r => r._redraw(fi));
+                        }
+                        if (playerImg) playerImg.src = playerFrames[ci].src;
+                    }, 110);
+
+                    function build(downitText) {
+                        badgeRef = badge;
+                        badge.style.transition = 'filter 0.6s ease, opacity 0.6s ease';
+                        const titleText = 'DOWNIT';
+                        const titleW = titleText.length * Math.round(29 * 2);
+                        const title = renderBitmapText(titleText, container, { scale: 2, width: titleW });
+                        const cv = renderBitmapText(downitText, container, { scale: 0.6 });
+                        cvRef = cv;
+                        titleRef = title;
+                        cv.style.transition = 'filter 0.6s ease, opacity 0.6s ease';
+                        title.style.transition = 'filter 0.6s ease, opacity 0.6s ease';
+
+                        playerImg = document.createElement('img');
+                        playerImg.src = playerFrames[0].src;
+                        playerImg.className = 'player-sprite';
+                        playerImg.style.cssText = 'position:absolute; image-rendering:pixelated; transition:filter 1s ease, opacity 1s ease;';
+
+                        const titleH = title.height;
+                        const playerAnchor = document.createElement('div');
+                        playerAnchor.style.cssText = 'position:relative; width:0; height:0; flex-shrink:0;';
+                        playerAnchor.appendChild(playerImg);
+
+                        function syncPlayerSize() {
+                            const sz = window.innerWidth < 768 ? titleH : 64;
+                            playerImg.style.width = sz + 'px';
+                            playerImg.style.height = sz + 'px';
+                            playerImg.style.left = '10px';
+                            playerImg.style.top = (-sz / 2) + 'px';
+                        }
+                        syncPlayerSize();
+                        window.addEventListener('resize', syncPlayerSize);
+                        window._downitSyncPlayerSize = syncPlayerSize;
+
+                        const titleRow = document.createElement('div');
+                        titleRow.style.cssText = 'display:flex; align-items:center;';
+                        titleRow.appendChild(title);
+                        titleRow.appendChild(playerAnchor);
+
+                        const press = document.createElement('div');
+                        press.style.cssText = 'padding-left:5px; margin-top:60px; transition:filter 0.6s ease, opacity 0.6s ease;';
+                        pressDivRef = press;
+                        const pressLabel = renderBitmapText('press-', container, { scale: 0.8 });
+                        pressLabel.style.marginBottom = '16px';
+                        pressRefs.push(pressLabel);
+                        press.appendChild(pressLabel);
+                        const pressLinks = [
+                            { text: 'app store facebook', url: 'https://www.facebook.com/watch/?v=944729851047350' },
+                            { text: 'apple editorial',    url: 'https://apps.apple.com/us/story/id1768807696' },
+                            { text: 'appgefahren:de',     url: 'https://www.appgefahren.de/downit-neues-indie-strategie-spiel-fuers-iphone-im-test-368011.html' },
+                        ];
+                        const linkCharset = " abcdefghijklmnopqrstuvwxyz0123456789:+()FSMHE-?";
+                        const linkScaledW = Math.round(29 * 0.6);
+                        pressLinks.forEach(({ text, url }) => {
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.target = '_blank';
+                            a.style.cssText = 'display:block; cursor:pointer; border-bottom:1px solid white; margin-bottom:8px;';
+                            const textW = [...text].filter(c => linkCharset.includes(c.toLowerCase())).length * linkScaledW;
+                            const lc = renderBitmapText(text, container, { scale: 0.6, width: textW + linkScaledW });
+                            a.style.width = textW + 'px';
+                            pressRefs.push(lc);
+                            a.appendChild(lc);
+                            press.appendChild(a);
+                        });
+
+                        wrap.appendChild(titleRow);
+                        wrap.appendChild(cv);
+                        wrap.appendChild(badge);
+                        wrap.appendChild(press);
+                        container.appendChild(wrap);
+                        syncBgH();
+                    }
+                    fetch('games/text/downit.txt')
+                        .then(r => r.text())
+                        .then(t => {
+                            if (fontImages['1'].complete) build(t);
+                            else fontImages['1'].addEventListener('load', () => build(t));
+                        })
+                        .catch(() => {});
+                },
+                'nahwc': (container) => {
+                    container.style.backgroundColor = '#171515';
+
+                    const wrap = document.createElement('div');
+                    wrap.style.cssText = 'position:relative; width:100%; display:flex; flex-direction:column;';
+
+                    const imgs = document.createElement('div');
+                    imgs.className = 'nahwc-imgs';
+
+                    const leftCol = document.createElement('div');
+                    leftCol.className = 'nahwc-left-col';
+                    leftCol.style.cssText = 'display:flex; flex-direction:column;';
+                    const textlogoImg = document.createElement('img');
+                    textlogoImg.src = 'games/nahwc/textlogo.png';
+                    textlogoImg.className = 'nahwc-img';
+                    leftCol.appendChild(textlogoImg);
+
+                    const awardImg = document.createElement('img');
+                    awardImg.src = 'games/nahwc/award.png';
+                    awardImg.className = 'nahwc-award';
+                    awardImg.style.cssText = 'position:absolute; top:0; right:0; width:150px; height:auto; image-rendering:auto; transition:width 0.1s, opacity 0.1s;';
+
+                    const logoImg = document.createElement('img');
+                    logoImg.src = 'games/nahwc/logo.png';
+                    logoImg.className = 'nahwc-img nahwc-logo';
+
+                    imgs.appendChild(leftCol);
+                    imgs.appendChild(logoImg);
+
+                    const sizeAward = () => {
+                        if (!awardImg.isConnected) { awardRo.disconnect(); return; }
+                        if (window.innerWidth <= 768) { awardImg.style.opacity = ''; awardImg.style.width = ''; return; }
+                        const available = wrap.offsetWidth - (leftCol.offsetWidth + logoImg.offsetWidth);
+                        if (available < 70) {
+                            awardImg.style.opacity = '0';
+                        } else {
+                            awardImg.style.opacity = '1';
+                            awardImg.style.width = Math.min(150, available) + 'px';
+                        }
+                    };
+                    const awardRo = new ResizeObserver(sizeAward);
+                    awardRo.observe(wrap);
+
+                    const p = document.createElement('p');
+                    p.style.paddingLeft = '5px';
+                    p.style.fontFamily = 'nahwc-font';
+                    p.style.letterSpacing = '-0.2em';
+                    p.style.textTransform = 'uppercase';
+                    fetch('games/text/nahwc.txt')
+                        .then(r => r.text())
+                        .then(t => { p.innerHTML = t.trim().replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>'); })
+                        .catch(() => {});
+                    wrap.appendChild(imgs);
+                    wrap.appendChild(awardImg);
+                    wrap.appendChild(p);
+                    container.appendChild(wrap);
+                },
+                'teeny dungeon': (container) => {
+                    const p = document.createElement('p');
+                    p.style.cssText = 'padding-left:5px; font-family:pico-font; text-transform:uppercase; font-size:14px; line-height:2;';
+                    fetch('games/text/teenydungeon.txt')
+                        .then(r => r.text())
+                        .then(t => { p.innerHTML = t.trim().replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>'); })
+                        .catch(() => {});
+                    container.appendChild(p);
+                },
+                'picocraft': (container) => {
+                    container.style.backgroundColor = '#29ADFF';
+                    container.style.position = 'relative';
+
+                    const canvas2 = document.createElement('canvas');
+                    canvas2.style.cssText = 'position:absolute; top:0; left:0; width:100%; height:100%; image-rendering:pixelated; pointer-events:none; z-index:0; filter:blur(1.5px) brightness(0.6); opacity:0.5;';
+                    container.appendChild(canvas2);
+
+                    const canvas = document.createElement('canvas');
+                    canvas.style.cssText = 'position:absolute; top:0; left:0; width:100%; height:100%; image-rendering:pixelated; pointer-events:none; z-index:1;';
+                    container.appendChild(canvas);
+
+                    const p = document.createElement('p');
+                    p.style.cssText = 'padding-left:5px; font-family:pico-font; text-transform:uppercase; font-size:14px; line-height:2; position:relative; z-index:2; text-shadow: 0px 3px 3px #00000022;';
+                    fetch('games/text/picocraft.txt')
+                        .then(r => r.text())
+                        .then(t => {
+                            p.innerHTML = t.trim().replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>');
+                            const playLink = p.querySelector('a[href*="picocraft.html"]');
+                            if (playLink) {
+                                playLink.addEventListener('click', (e) => {
+                                    e.preventDefault();
+                                    const iframe = document.createElement('iframe');
+                                    iframe.src = 'games/picocraft/play/picocraft.html';
+                                    iframe.scrolling = 'no';
+                                    iframe.style.cssText = 'display:block; width:100%; aspect-ratio:1/1; border:none; overflow:hidden;';
+                                    const controls = document.createElement('div');
+                                    controls.style.cssText = 'display:inline-block; padding:6px 18px; font-size:14px; margin-top:6px; line-height:2;';
+                                    controls.innerHTML = '&lt;^&gt;v to move &nbsp; [O] to jump &nbsp; [X] to use action &nbsp; v+[O] to switch mode';
+                                    const wrapper = document.createElement('div');
+                                    wrapper.className = 'picocraft-game';
+                                    wrapper.style.cssText = 'display:inline-block; max-width:500px; width:100%; background:rgba(0,0,0,0.5); padding:10px; box-sizing:border-box;';
+                                    wrapper.appendChild(iframe);
+                                    wrapper.appendChild(controls);
+                                    const reveal = document.createElement('div');
+                                    reveal.style.cssText = 'overflow:hidden; max-height:0; transition:max-height 0.4s ease;';
+                                    reveal.appendChild(wrapper);
+                                    playLink.parentNode.replaceWith(reveal);
+                                    requestAnimationFrame(() => requestAnimationFrame(() => {
+                                        reveal.style.maxHeight = '700px';
+                                    }));
+
+                                    const origC2Filter = canvas2.style.filter;
+                                    canvas.style.transition = 'filter 0.4s';
+                                    canvas2.style.transition = 'filter 0.4s';
+                                    canvas.style.filter = 'blur(4px) brightness(0.75)';
+                                    canvas2.style.filter = origC2Filter + ' blur(4px)';
+
+
+                                    document.addEventListener('visibilitychange', function onVis() {
+                                        if (!wrapper.isConnected) { document.removeEventListener('visibilitychange', onVis); return; }
+                                        if (document.visibilityState === 'visible') {
+                                            canvas.style.filter = '';
+                                            canvas2.style.filter = origC2Filter;
+                                            bgSpeed = 1;
+                                        }
+                                    });
+                                });
+                            }
+                        })
+                        .catch(() => {});
+                    container.appendChild(p);
+
+                    const TILE = 32;
+                    let terrainH = 7, terrainTarget = 7, treeCountdown = 8;
+                    const terrain = [];
+
+                    function genCol() {
+                        if (Math.random() < 0.08)
+                            terrainTarget = Math.max(7, Math.min(9, terrainTarget + (Math.random() < 0.5 ? -1 : 1)));
+                        terrainH += (terrainTarget - terrainH) * 0.2;
+                        let tree = null;
+                        if (treeCountdown <= 0 && Math.random() < 0.15) {
+                            tree = true;
+                            treeCountdown = 6 + Math.floor(Math.random() * 8);
+                        } else treeCountdown--;
+                        terrain.push({ h: Math.round(terrainH), tree });
+                    }
+                    for (let i = 0; i < 200; i++) genCol();
+
+                    const TILE2 = 20;
+                    let bgH = 6, bgTarget = 6, bgTreeCd = 10;
+                    const terrain2 = [];
+
+                    function genCol2() {
+                        if (Math.random() < 0.07)
+                            bgTarget = Math.max(5, Math.min(8, bgTarget + (Math.random() < 0.5 ? -1 : 1)));
+                        bgH += (bgTarget - bgH) * 0.15;
+                        let tree = null;
+                        if (bgTreeCd <= 0 && Math.random() < 0.12) {
+                            tree = true;
+                            bgTreeCd = 8 + Math.floor(Math.random() * 10);
+                        } else bgTreeCd--;
+                        terrain2.push({ h: Math.round(bgH), tree });
+                    }
+                    for (let i = 0; i < 300; i++) genCol2();
+
+                    const tiles = {};
+                    let loaded = 0;
+                    ['dirt', 'grass', 'leaf', 'log'].forEach(n => {
+                        const img = new Image();
+                        img.onload = () => { if (++loaded === 4) startAnim(); };
+                        img.src = `games/picocraft/${n}.png`;
+                        tiles[n] = img;
+                    });
+
+                    let canvasW = 0, canvasH = 0;
+                    const ro = new ResizeObserver(([e]) => {
+                        canvasW = Math.round(e.contentRect.width);
+                        canvasH = Math.round(e.contentRect.height);
+                    });
+                    ro.observe(canvas);
+
+                    function startAnim() {
+                        let scrollPx = 0, lastTs = null, animId = null;
+                        const ctx  = canvas.getContext('2d');
+                        const ctx2 = canvas2.getContext('2d');
+                        ctx.imageSmoothingEnabled = false;
+                        ctx2.imageSmoothingEnabled = false;
+
+                        function draw(ts) {
+                            if (!canvas.isConnected) { cancelAnimationFrame(animId); ro.disconnect(); return; }
+                            const dt = lastTs !== null ? ts - lastTs : 0;
+                            lastTs = ts;
+                            scrollPx += 20 * dt / 1000;
+
+                            const dpr = window.devicePixelRatio || 1;
+                            const needW = Math.round(canvasW * dpr);
+                            const needH = Math.round(canvasH * dpr);
+                            if (canvas.width !== needW || canvas.height !== needH) {
+                                canvas.width  = needW;
+                                canvas.height = needH;
+                                canvas2.width  = needW;
+                                canvas2.height = needH;
+                            }
+
+                            const firstCol = Math.floor(scrollPx / TILE);
+                            const visCols = Math.ceil(canvasW / TILE) + 2;
+                            while (terrain.length < firstCol + visCols + 20) genCol();
+
+                            // background parallax layer
+                            const bgScroll = scrollPx * 0.45;
+                            const bgFirst = Math.floor(bgScroll / TILE2);
+                            const bgVis = Math.ceil(canvasW / TILE2) + 2;
+                            while (terrain2.length < bgFirst + bgVis + 20) genCol2();
+                            ctx2.setTransform(dpr, 0, 0, dpr, 0, 0);
+                            ctx2.imageSmoothingEnabled = false;
+                            ctx2.clearRect(0, 0, canvasW, canvasH);
+                            const bgOx = -(bgScroll % TILE2);
+                            const bgLift = Math.round(canvasH * 0.18);
+                            for (let i = -3; i <= bgVis + 2; i++) {
+                                const ci = bgFirst + i;
+                                if (ci < 0 || ci >= terrain2.length) continue;
+                                const { h, tree } = terrain2[ci];
+                                const x = Math.round(bgOx + i * TILE2);
+                                const groundY = canvasH - h * TILE2 - bgLift;
+                                ctx2.drawImage(tiles.grass, x, groundY, TILE2, TILE2);
+                                for (let y = groundY + TILE2; y <= canvasH + TILE2; y += TILE2)
+                                    ctx2.drawImage(tiles.dirt, x, y, TILE2, TILE2);
+                                if (tree) {
+                                    ctx2.drawImage(tiles.log, x, groundY - TILE2,     TILE2, TILE2);
+                                    ctx2.drawImage(tiles.log, x, groundY - 2 * TILE2, TILE2, TILE2);
+                                    for (let lx = -2; lx <= 2; lx++)
+                                        ctx2.drawImage(tiles.leaf, x + lx * TILE2, groundY - 3 * TILE2, TILE2, TILE2);
+                                    for (let lx = -2; lx <= 2; lx++)
+                                        ctx2.drawImage(tiles.leaf, x + lx * TILE2, groundY - 4 * TILE2, TILE2, TILE2);
+                                    for (let lx = -1; lx <= 1; lx++)
+                                        ctx2.drawImage(tiles.leaf, x + lx * TILE2, groundY - 5 * TILE2, TILE2, TILE2);
+                                }
+                            }
+
+                            // foreground layer
+                            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                            ctx.imageSmoothingEnabled = false;
+                            ctx.clearRect(0, 0, canvasW, canvasH);
+                            const ox = -(scrollPx % TILE);
+
+                            for (let i = -3; i <= visCols + 2; i++) {
+                                const ci = firstCol + i;
+                                if (ci < 0 || ci >= terrain.length) continue;
+                                const { h, tree } = terrain[ci];
+                                const x = Math.round(ox + i * TILE);
+                                const groundY = canvasH - h * TILE;
+
+                                ctx.drawImage(tiles.grass, x, groundY, TILE, TILE);
+                                for (let y = groundY + TILE; y <= canvasH + TILE; y += TILE)
+                                    ctx.drawImage(tiles.dirt, x, y, TILE, TILE);
+
+                                if (tree) {
+                                    // 2 log tiles
+                                    ctx.drawImage(tiles.log, x, groundY - TILE,     TILE, TILE);
+                                    ctx.drawImage(tiles.log, x, groundY - 2 * TILE, TILE, TILE);
+                                    // row 1: 5 leaves
+                                    for (let lx = -2; lx <= 2; lx++)
+                                        ctx.drawImage(tiles.leaf, x + lx * TILE, groundY - 3 * TILE, TILE, TILE);
+                                    // row 2: 5 leaves
+                                    for (let lx = -2; lx <= 2; lx++)
+                                        ctx.drawImage(tiles.leaf, x + lx * TILE, groundY - 4 * TILE, TILE, TILE);
+                                    // row 3 (top): 3 leaves
+                                    for (let lx = -1; lx <= 1; lx++)
+                                        ctx.drawImage(tiles.leaf, x + lx * TILE, groundY - 5 * TILE, TILE, TILE);
+                                }
+                            }
+                            animId = requestAnimationFrame(draw);
+                        }
+                        animId = requestAnimationFrame(draw);
+                    }
+
+                    if (loaded === 4) startAnim();
+                },
+                'redrock': (container) => {
+                    container.style.backgroundColor = '#000';
+                    container.style.position = 'relative';
+
+                    const canvas = document.createElement('canvas');
+                    canvas.style.cssText = 'position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0;';
+                    container.appendChild(canvas);
+
+                    const lightImg = new Image();
+                    lightImg.src = 'games/redrock/light.png';
+
+                    const N = 8;
+                    const lights = Array.from({length: N}, (_, i) => ({
+                        anchorX: (i + 0.15 + Math.random() * 0.7) / N,
+                        length: 0.06 + Math.random() * 0.22,
+                        theta: (Math.random() < 0.5 ? 1 : -1) * (0.04 + Math.random() * 0.08),
+                        thetaVel: 0,
+                        glowR: 90 + Math.random() * 80,
+                        phase: Math.random() * Math.PI * 2,
+                        speed: 0.6 + Math.random() * 0.8,
+                    }));
+
+                    let canvasW = 0, canvasH = 0;
+                    const ro = new ResizeObserver(([e]) => {
+                        canvasW = Math.round(e.contentRect.width);
+                        canvasH = Math.round(e.contentRect.height);
+                    });
+                    ro.observe(canvas);
+
+                    let animId, lastTs = null;
+                    function draw(ts) {
+                        if (!canvas.isConnected) { cancelAnimationFrame(animId); ro.disconnect(); return; }
+                        const dt = Math.min(lastTs !== null ? ts - lastTs : 16, 50);
+                        lastTs = ts;
+                        const dtS = dt / 1000;
+
+                        const dpr = window.devicePixelRatio || 1;
+                        const needW = Math.round(canvasW * dpr);
+                        const needH = Math.round(canvasH * dpr);
+                        if (canvas.width !== needW || canvas.height !== needH) {
+                            canvas.width = needW;
+                            canvas.height = needH;
+                        }
+                        const ctx = canvas.getContext('2d');
+                        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                        ctx.imageSmoothingEnabled = false;
+                        ctx.clearRect(0, 0, canvasW, canvasH);
+
+                        const mobile = window.innerWidth <= 768;
+                        for (const l of lights) {
+                            const len = l.length * canvasH * (mobile ? 1.4 : 1);
+                            const acc = -(200 / Math.max(len, 10)) * Math.sin(l.theta);
+                            l.thetaVel += acc * dtS;
+                            l.theta += l.thetaVel * dtS;
+
+                            const ax = l.anchorX * canvasW;
+                            const x = ax + Math.sin(l.theta) * len;
+                            const y = mobile
+                                ? canvasH - Math.cos(l.theta) * len
+                                : Math.cos(l.theta) * len;
+
+                            // String
+                            ctx.beginPath();
+                            ctx.moveTo(ax, mobile ? canvasH : 0);
+                            ctx.lineTo(x, y);
+                            ctx.strokeStyle = '#5F574F';
+                            ctx.lineWidth = 3;
+                            ctx.stroke();
+
+                            const scale = 6;
+                            const sw = lightImg.naturalWidth > 0 ? lightImg.naturalWidth * scale : 0;
+                            const sh = lightImg.naturalHeight > 0 ? lightImg.naturalHeight * scale : 0;
+                            const glowCy = mobile ? y - sh / 2 : y + sh / 2;
+                            const spriteY = mobile ? y - sh : y;
+
+                            // Glow
+                            const pulse = 0.85 + 0.15 * Math.sin(ts / 900 * l.speed + l.phase);
+                            const r = l.glowR * pulse;
+                            const grad = ctx.createRadialGradient(x, glowCy, 0, x, glowCy, r);
+                            grad.addColorStop(0,    `rgba(210,50,20,${0.35 * pulse})`);
+                            grad.addColorStop(0.35, `rgba(160,25,10,${0.18 * pulse})`);
+                            grad.addColorStop(1,    'rgba(80,0,0,0)');
+                            ctx.fillStyle = grad;
+                            ctx.beginPath();
+                            ctx.arc(x, glowCy, r, 0, Math.PI * 2);
+                            ctx.fill();
+
+                            // Sprite
+                            if (lightImg.complete && lightImg.naturalWidth > 0) {
+                                ctx.globalAlpha = 0.65 + 0.35 * (0.5 + 0.5 * Math.sin(ts / 900 * l.speed + l.phase));
+                                ctx.drawImage(lightImg, Math.round(x - sw / 2), Math.round(spriteY), sw, sh);
+                                ctx.globalAlpha = 1;
+                            }
+                        }
+                        animId = requestAnimationFrame(draw);
+                    }
+                    animId = requestAnimationFrame(draw);
+
+                    const p = document.createElement('p');
+                    p.style.cssText = 'padding-left:5px; font-family:pico-font; text-transform:uppercase; font-size:14px; line-height:2; text-shadow:0px 5px 8px #000000aa; position:relative; z-index:1; ';
+                    fetch('games/text/redrock.txt')
+                        .then(r => r.text())
+                        .then(t => {
+                            p.innerHTML = t.trim().replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>');
+                            const playLink = p.querySelector('a[href*="redrock.html"]');
+                            if (playLink) {
+                                playLink.addEventListener('click', (e) => {
+                                    e.preventDefault();
+                                    const iframe = document.createElement('iframe');
+                                    iframe.src = 'games/redrock/redrock.html';
+                                    iframe.scrolling = 'no';
+                                    iframe.style.cssText = 'display:block; width:100%; aspect-ratio:1/1; border:none; overflow:hidden;';
+                                    const wrapper = document.createElement('div');
+                                    wrapper.className = 'picocraft-game';
+                                    wrapper.style.cssText = 'display:inline-block; max-width:500px; width:100%; background:#5F574F; padding:10px; box-sizing:border-box;';
+                                    const controls = document.createElement('div');
+                                    controls.style.cssText = 'display:inline-block; padding:6px 18px; font-size:14px; margin-top:6px; line-height:2;';
+                                    controls.innerHTML = '&lt;^&gt;V TO MOVE &nbsp; [O] TO JUMP &nbsp; [X] TO ROLL';
+                                    wrapper.appendChild(iframe);
+                                    wrapper.appendChild(controls);
+                                    const reveal = document.createElement('div');
+                                    reveal.style.cssText = 'overflow:hidden; max-height:0; transition:max-height 0.4s ease;';
+                                    reveal.appendChild(wrapper);
+                                    playLink.parentNode.replaceWith(reveal);
+                                    requestAnimationFrame(() => requestAnimationFrame(() => {
+                                        reveal.style.maxHeight = '700px';
+                                    }));
+
+                                    canvas.style.transition = 'filter 0.4s';
+                                    canvas.style.filter = 'blur(4px) brightness(0.75)';
+                                    document.addEventListener('visibilitychange', function onVis() {
+                                        if (!wrapper.isConnected) { document.removeEventListener('visibilitychange', onVis); return; }
+                                        if (document.visibilityState === 'visible') canvas.style.filter = '';
+                                    });
+                                });
+                            }
+                        })
+                        .catch(() => {});
+                    container.appendChild(p);
+                },
+            }
+        },
+        music:    {
+            projects: ['README.txt', 'coolbeats', 'ellaloko', 'd.land', 'grphg', 'omb', 'misc'],
+            content: {
+                'README.txt': '<p style="padding-left:5px">this is a collection of some of my songs/projects.<br>the best way to experience these are to click on the first song and let the whole thing autoplay.<br><br>everything produced by me!<br><br>also feel free to check out my <a href="https://www.youtube.com/@SLGCTY" target="_blank" style="color:white">youtube</a>, <a href="https://open.spotify.com/artist/2ElM6xA4vOVFQcBQ9rtLrM?si=ebOPM1tgSuSHu-eD2AAM4A" target="_blank" style="color:white">spotify</a>, and <a href="http://ollieollieollie.bandcamp.com/" target="_blank" style="color:white">bandcamp</a>!</p>',
+            }
+        },
+        design:   {
+            projects: ['digital', 'covers'],
+            content: {
+                'README.txt': '<p style="padding-left:5px">this is a collection of some of the art/design projects ive done including personal projects, commissions, and album covers.</p>',
+                digital:  '<p style="padding-left:5px">design project 1 content</p>',
+                physical: '<p style="padding-left:5px">design project 2 content</p>',
+                digital: (el) => {
+                    const names = ['utcg_scornclaw.png', 'utcg_darktome.png', 'utcg_slimysam.png', 'utcg_smokebomb.png', 'utcg_yu.png'];
+                    const wrap = document.createElement('div');
+                    wrap.style.cssText = 'display:flex; flex-wrap:wrap; gap:20px; justify-content:center; padding-top:40px; padding-bottom:40px;';
+                    names.forEach(name => {
+                        const item = document.createElement('div');
+                        item.style.cssText = 'display:flex; flex-direction:column; gap:6px; max-width:min(500px, 100%); min-width:0;';
+                        const img = document.createElement('img');
+                        img.src = 'design/digital/' + name;
+                        img.className = 'cover-img';
+                        img.style.cssText = 'width:100%; height:auto; display:block;';
+                        const caption = document.createElement('p');
+                        caption.style.cssText = 'font-size:16px; color:rgba(255,255,255,0.5); margin:0;';
+                        caption.textContent = name;
+                        item.appendChild(img);
+                        item.appendChild(caption);
+                        wrap.appendChild(item);
+                    });
+                    el.appendChild(wrap);
+                },
+                covers: (el) => {
+                    const names = ['bhleakscover.png', 'chair.png', 'christinasworld.png', 'crueljoke.png', 'lucifershug.png', 'omb2.png', 'volumegamma2.png', 'willow.jpg'];
+                    const wrap = document.createElement('div');
+                    wrap.className = 'cover-grid';
+                    wrap.style.cssText = 'display:flex; flex-wrap:wrap; gap:20px; justify-content:center; padding-top:40px; padding-bottom:40px;';
+                    names.forEach(name => {
+                        const item = document.createElement('div');
+                        item.style.cssText = 'display:flex; flex-direction:column; gap:6px;';
+                        const img = document.createElement('img');
+                        img.src = 'design/covers/' + name;
+                        img.className = 'cover-img';
+                        img.style.cssText = 'width:500px; height:500px; object-fit:cover; display:block;';
+                        const caption = document.createElement('p');
+                        caption.style.cssText = 'font-size:16px; color:rgba(255,255,255,0.5); margin:0;';
+                        caption.textContent = name;
+                        item.appendChild(img);
+                        item.appendChild(caption);
+                        wrap.appendChild(item);
+                    });
+                    el.appendChild(wrap);
+                },
+            }
+        },
+        software: {
+            projects: ['softwareproject1', 'softwareproject2'],
+            content: {
+                softwareproject1: '<p style="padding-left:5px">software project 1 content</p>',
+                softwareproject2: '<p style="padding-left:5px">software project 2 content</p>',
+            }
+        },
+        misc:     {
+            projects: ['junkproject1', 'junkproject2'],
+            content: {
+                junkproject1: '<p style="padding-left:5px">junk project 1 content</p>',
+                junkproject2: '<p style="padding-left:5px">junk project 2 content</p>',
+            }
+        },
+    };
+
+    const albums = {
+        ellaloko: [
+            { file: '01%20on%20that%20denim%20shit%2C%20huh%3F.mp3', title: 'on that denim shit, huh?.mp3' },
+            { file: '02%20saddam%20usain.mp3',         title: 'saddam usain.mp3' },
+            { file: '03%20world%20in%20my%20palm.mp3', title: 'world in my palm.mp3' },
+            { file: '04%20hex%20girls.mp3',            title: 'hex girls.mp3' },
+            { file: '05%20butterfly.mp3',              title: 'butterfly.mp3' },
+            { file: '06%20people%27s%20champ!.mp3',    title: "people's champ!.mp3" },
+            { file: '07%20honey%20jack.mp3',           title: 'honey jack.mp3' },
+            { file: '08%20deadbolt.mp3',               title: 'deadbolt.mp3' },
+            { file: '09%20dumbs%20and%20scholars.mp3', title: 'dumbs and scholars.mp3' },
+            { file: '10%20mary%20and%20jesus.mp3',     title: 'mary and jesus.mp3' },
+            { file: '11%20i%20love%20myself.mp3',      title: 'i love myself.mp3' },
+        ],
+        'd.land': [
+            { file: '01.welcome2dland.mp3',      title: 'welcome2dland.mp3' },
+            { file: '02.dinosaurpark.mp3',       title: 'dinosaur park.mp3' },
+            { file: '03.awesomesaucebeatbox.mp3',title: 'awesomesauce beatbox.mp3' },
+            { file: '04.drawadinosaur.mp3',      title: 'draw a dinosaur.mp3' },
+            { file: '05.browsethedinonet.mp3',   title: 'browse the dinonet.mp3' },
+        ],
+        coolbeats: [
+            { file: 'are%20you%20awake%20yet.m4a',                         title: 'are you awake yet.m4a' },
+            { file: 'coolbeat1.mp3',                                        title: 'coolbeat1.mp3' },
+            { file: 'lightsoninstrum.mp3',                                  title: 'lightsoninstrum.mp3' },
+            { file: 'coolbeat2_155.mp3',                                    title: 'coolbeat2_155.mp3' },
+            { file: 'beat1.wav',                                            title: 'beat1.wav' },
+            { file: '8_ALASKAv1.wav',                                       title: 'alaska v1.wav' },
+            { file: 'Project%20292_1.wav',                                  title: 'project 292.wav' },
+            { file: 'Project%20164_1.wav',                                  title: 'project 164.wav' },
+            { file: 'lopsided.wav',                                         title: 'lopsided.wav' },
+            { file: 'marysthemeflip.wav',                                   title: 'marysthemeflip.wav' },
+            { file: 'wildwestvibes.wav',                                    title: 'wildwestvibes.wav' },
+            { file: '1bump%20this.wav',                                     title: 'bump this.wav' },
+            { file: '3Project%20157.wav',                                   title: 'project 157.wav' },
+            { file: 'Project%2076pt1.wav',                                  title: 'project 76.wav' },
+            { file: 'HOLDTHEMONEY.wav',                                     title: 'holdthemoney.wav' },
+            { file: 'Project%2079%20-%204_8_21%2C%201.52%20AM.m4a',        title: 'project 79.m4a' },
+            { file: 'Project%2014%20-%2010_5_20%2C%201.20%20PM.m4a',       title: 'project 14.m4a' },
+            { file: '111aadasd%20-%209_24_20%2C%203.23%20PM.m4a',          title: '111aadasd.m4a' },
+            { file: '55555instrumentaldemo.m4a',                            title: '55555instdemo.m4a' },
+            { file: 'bowserlaugh.wav',                                      title: 'bowserlaugh.wav' },
+        ],
+        omb: [
+            { file: '01%20Rabbit.mp3',             title: 'rabbit.mp3' },
+            { file: '02%20Band%20Practice.mp3',    title: 'band practice.mp3' },
+            { file: '03%20Desert%20Snow.mp3',      title: 'desert snow.mp3' },
+            { file: '04%20Droopy%27s%20Track.mp3', title: "droopy's track.mp3" },
+            { file: '05%20Home.mp3',               title: 'home.mp3' },
+        ],
+        grphg: [
+            { file: '1_IWMTA.mp3', title: 'IWMTA.mp3' },
+            { file: '2_DIDJA.mp3', title: 'DIDJA.mp3' },
+            { file: '3_YEABB.mp3', title: 'YEABB.mp3' },
+            { file: '4_DOYAH.mp3', title: 'DOYAH.mp3' },
+            { file: '5_HEHEY.wav', title: 'HEHEY.wav' },
+            { file: '6_NADIT.mp3', title: 'NADIT.mp3' },
+        ],
+        misc: [
+            { file: 'monodouble.mp3',  title: 'monodouble.mp3' },
+            { file: 'stickyedit.wav',  title: 'stickyedit.wav' },
+            { file: 'weirdbeat.wav',   title: 'weirdbeat.wav' },
+            { file: 'kneel.aif',       title: 'kneel.aif' },
+        ],
+    };
+
+    const albumCredits = {
+        ellaloko:  'i did all the production on this project<br><br>ella loko is greydaughter and ollie!<br>ft. black karma, ghais guevara, mars makai, slug city, altair kareem<br>made with love. dont sample snitch.<br><br>05.24.2026',
+        coolbeats: 'beats i thought were cool/weird/interesting<br><br>08.11.2020-present',
+        'd.land':  'ost for a game that never existed <3<br><br>10.19.2023',
+        grphg:     'beat tape<br><br>12.12.2022',
+        omb:       'i started making one more block after the 2020 quarantine. my friends and i played a lot of minecraft while we were trapped inside.<br><br>08.12.2022',
+        misc:      'uncategorized and unfinished<br><br>XX.XX.20XX',
+    };
+
+    const projectCol      = document.getElementById('projectcolumn');
+    const contentArea     = document.getElementById('contentarea');
+    const sidebar         = document.querySelector('.sidebar');
+    const menubarPath     = document.getElementById('menubar-path');
+    const mobilePath      = document.getElementById('mobile-path');
+    const mobileNav       = document.getElementById('mobile-nav');
+    const mobileNavInner  = document.getElementById('mobile-nav-inner');
+    const mobileSongLabel = document.getElementById('mobile-song-label');
+    const audio           = document.getElementById('audio');
+    const playerLabel     = document.querySelector('.playertext p');
+
+    let currentAlbumKey  = 'coolbeats';
+    let currentSongIndex = 1;
+
+    playerLabel.style.cursor = 'pointer';
+    mobileSongLabel.style.cursor = 'pointer';
+
+    function goToCurrentAlbum() {
+        const musicCatEl = document.querySelector('#categorycolumn .selection[data-cat="music"]');
+        if (musicCatEl) selectCategory('music', musicCatEl);
+        const albumEl = [...projectCol.querySelectorAll('.selection')].find(el => el.textContent === currentAlbumKey);
+        if (albumEl) selectProject('music', currentAlbumKey, albumEl);
+    }
+
+    function isMobile() { return window.innerWidth <= 768; }
+
+    function setPath(path) {
+        menubarPath.textContent = path;
+        mobilePath.textContent  = path;
+        history.replaceState(null, '', '#' + path);
+    }
+
+    function navigateFromHash() {
+        const raw = location.hash.replace(/^#\//, '').replace(/\/$/, '');
+        if (!raw) {
+            const aboutEl = document.querySelector('#categorycolumn [data-cat="about"]');
+            if (aboutEl) selectCategory('about', aboutEl);
+            const bioEl = [...projectCol.querySelectorAll('.selection')].find(el => el.textContent === 'bio');
+            if (bioEl) selectProject('about', 'bio', bioEl);
+            return;
+        }
+        const parts = raw.split('/');
+        const cat   = decodeURIComponent(parts[0]);
+        const proj  = parts[1] ? decodeURIComponent(parts[1]) : null;
+        const songTitle = parts[2] ? decodeURIComponent(parts.slice(2).join('/')) : null;
+
+        const catEl = document.querySelector(`#categorycolumn [data-cat="${cat}"]`);
+        if (!catEl) return;
+        selectCategory(cat, catEl);
+
+        if (proj) {
+            const projEl = [...projectCol.querySelectorAll('.selection')].find(el => el.textContent === proj);
+            if (!projEl) return;
+            selectProject(cat, proj, projEl);
+
+            if (songTitle && albums[proj]) {
+                const songIdx = albums[proj].findIndex(s => s.title === songTitle);
+                const song    = albums[proj][songIdx];
+                const songEl  = [...contentArea.querySelectorAll('.song-item')][songIdx];
+                if (song && songEl) playSong(proj, song, songEl);
+            }
+        }
+    }
+
+    function playSong(albumKey, song, el) {
+        contentArea.querySelectorAll('.song-item').forEach(p => p.classList.remove('active'));
+        el.classList.add('active');
+        currentAlbumKey  = albumKey;
+        currentSongIndex = albums[albumKey].indexOf(song);
+        audio.src        = 'music/' + albumKey + '/' + song.file;
+        audio.currentTime = 0;
+        playerLabel.textContent   = song.title;
+        mobileSongLabel.textContent = song.title;
+        audio.play().catch(() => {});
+        setPath('/music/' + albumKey + '/' + song.title);
+    }
+
+    audio.addEventListener('ended', () => {
+        if (currentAlbumKey === null) return;
+        const list = albums[currentAlbumKey];
+        const nextIndex = currentSongIndex + 1;
+        if (nextIndex >= list.length) return;
+        const nextSong = list[nextIndex];
+        const songEls = contentArea.querySelectorAll('.song-item');
+        const nextEl  = songEls[nextIndex];
+        playSong(currentAlbumKey, nextSong, nextEl || document.createElement('p'));
+    });
+
+    const albumPadding = 'calc(max(150px, calc(50vh - 6em)))';
+
+    function renderAlbum(albumKey) {
+        contentArea.classList.remove('center-view');
+        sidebar.classList.remove('divider');
+        if (isMobile()) {
+            contentArea.style.scrollSnapType   = 'none';
+            contentArea.style.paddingTop       = '';
+            contentArea.style.scrollPaddingTop = '';
+        } else {
+            contentArea.style.scrollSnapType   = 'y mandatory';
+            contentArea.style.paddingTop       = albumPadding;
+            contentArea.style.scrollPaddingTop = albumPadding;
+        }
+        contentArea.innerHTML = '';
+        const coverImg = document.createElement('img');
+        coverImg.src = 'music/' + albumKey + '/cover.png';
+        coverImg.className = 'album-cover';
+        coverImg.onerror = () => { coverImg.style.display = 'none'; };
+        contentArea.appendChild(coverImg);
+        albums[albumKey].forEach(song => {
+            const p = document.createElement('p');
+            p.className = 'song-item';
+
+            const titleSpan = document.createElement('span');
+            titleSpan.className = 'song-title';
+            titleSpan.textContent = song.title;
+
+            const durSpan = document.createElement('span');
+            durSpan.className = 'song-duration';
+
+            p.appendChild(titleSpan);
+            p.appendChild(durSpan);
+            p.addEventListener('click', () => playSong(albumKey, song, p));
+            contentArea.appendChild(p);
+
+            const tmp = new Audio();
+            tmp.preload = 'metadata';
+            tmp.onloadedmetadata = () => {
+                const s = Math.floor(tmp.duration);
+                durSpan.textContent = Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2);
+            };
+            tmp.src = 'music/' + albumKey + '/' + song.file;
+        });
+        if (albumKey === currentAlbumKey) {
+            const songEls = contentArea.querySelectorAll('.song-item');
+            if (songEls[currentSongIndex]) songEls[currentSongIndex].classList.add('active');
+        }
+        const credits = document.createElement('p');
+        credits.style.cssText = 'padding: 14px 14px 14px 5px; font-size: 18px; color: rgba(255,255,255,0.5);';
+        credits.innerHTML = albumCredits[albumKey] || '';
+        contentArea.appendChild(credits);
+    }
+
+    function selectCategory(cat, el) {
+        document.querySelectorAll('#categorycolumn .selection').forEach(p => p.classList.remove('active'));
+        el.classList.add('active');
+        setPath('/' + cat + '/');
+        projectCol.innerHTML  = '';
+        contentArea.innerHTML = '';
+        contentArea.style.backgroundColor = '';
+        contentArea.style.backgroundImage = '';
+        contentArea.style.backgroundSize = '';
+        contentArea.style.backgroundPosition = '';
+        contentArea.style.backgroundRepeat = '';
+        contentArea.style.position = '';
+        sidebar.classList.remove('divider');
+
+        data[cat].projects.forEach(proj => {
+            const p = document.createElement('p');
+            p.className = 'selection';
+            p.textContent = proj;
+            p.addEventListener('click', () => selectProject(cat, proj, p));
+            projectCol.appendChild(p);
+        });
+    }
+
+    function selectProject(cat, proj, el) {
+        document.querySelectorAll('#projectcolumn .selection, .mob-acc-proj').forEach(p => p.classList.remove('active'));
+        el.classList.add('active');
+        setPath('/' + cat + '/' + proj + '/');
+        mobileNav.classList.remove('open');
+        setHamburgerOpen(false);
+
+        if (albums[proj]) {
+            renderAlbum(proj);
+        } else {
+            contentArea.classList.remove('center-view');
+            if (proj !== 'covers' && proj !== 'digital') contentArea.classList.add('center-view');
+            sidebar.classList.add('divider');
+            contentArea.style.scrollSnapType   = 'none';
+            contentArea.style.paddingTop       = '0';
+            contentArea.style.scrollPaddingTop = '0';
+            const content = data[cat].content[proj];
+            contentArea.innerHTML = '';
+            contentArea.style.backgroundColor = '';
+            contentArea.style.backgroundImage = '';
+            contentArea.style.backgroundSize = '';
+            contentArea.style.backgroundPosition = '';
+            contentArea.style.backgroundRepeat = '';
+            contentArea.style.position = '';
+            contentArea.style.display = '';
+            if (typeof content === 'function') content(contentArea);
+            else contentArea.innerHTML = content || '';
+        }
+    }
+
+    playerLabel.addEventListener('click', goToCurrentAlbum);
+    mobileSongLabel.addEventListener('click', goToCurrentAlbum);
+
+    document.querySelectorAll('#categorycolumn .selection').forEach(el => {
+        el.addEventListener('click', () => selectCategory(el.dataset.cat, el));
+    });
+
+    const hiddenCats = new Set(['software', 'misc']);
+    Object.keys(data).filter(cat => !hiddenCats.has(cat)).forEach(cat => {
+        const catBtn = document.createElement('p');
+        catBtn.className = 'mob-acc-cat';
+        catBtn.textContent = cat;
+
+        const accWrap = document.createElement('div');
+        accWrap.className = 'mob-acc-wrap';
+
+        const accInner = document.createElement('div');
+        accInner.className = 'mob-acc-inner';
+
+        data[cat].projects.forEach(proj => {
+            const pm = document.createElement('p');
+            pm.className = 'selection mob-acc-proj';
+            pm.textContent = proj;
+            pm.addEventListener('click', () => selectProject(cat, proj, pm));
+            accInner.appendChild(pm);
+        });
+
+        accWrap.appendChild(accInner);
+
+        catBtn.addEventListener('click', () => {
+            const isOpen = accWrap.classList.contains('open');
+            mobileNavInner.querySelectorAll('.mob-acc-wrap').forEach(w => w.classList.remove('open'));
+            mobileNavInner.querySelectorAll('.mob-acc-cat').forEach(b => b.classList.remove('open'));
+            if (!isOpen) {
+                accWrap.classList.add('open');
+                catBtn.classList.add('open');
+            }
+        });
+
+        mobileNavInner.appendChild(catBtn);
+        mobileNavInner.appendChild(accWrap);
+    });
+
+    const hamburgerBtn  = document.getElementById('hamburger-btn');
+    const hamburgerIcon = document.getElementById('hamburger-icon');
+    const closeIcon     = document.getElementById('close-icon');
+    function setHamburgerOpen(open) {
+        hamburgerIcon.style.display = open ? 'none' : '';
+        closeIcon.style.display     = open ? '' : 'none';
+    }
+    hamburgerBtn.addEventListener('click', () => {
+        const nowOpen = mobileNav.classList.toggle('open');
+        setHamburgerOpen(nowOpen);
+    });
+
+    window.addEventListener('resize', () => {
+        if (!contentArea.querySelector('.song-item')) return;
+        if (isMobile()) {
+            contentArea.style.scrollSnapType   = 'none';
+            contentArea.style.paddingTop       = '';
+            contentArea.style.scrollPaddingTop = '';
+        } else {
+            contentArea.style.scrollSnapType   = 'y mandatory';
+            contentArea.style.paddingTop       = albumPadding;
+            contentArea.style.scrollPaddingTop = albumPadding;
+        }
+    });
+
+    window.addEventListener('hashchange', navigateFromHash);
+    navigateFromHash();
+})();
+</script>
+</body>
+</html>

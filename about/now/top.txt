@@ -1,0 +1,5 @@
+here's what i've been working on lately!
+
+i've been building <a href="https://www.untitledtcg.net/" target="_blank" style="color:white">Untitled Card Game</a> a casual party game where players construct a shared deck and then turn on each other to claim powerful treasures. it's quick, chaotic, and built for a table full of friends.
+
+i've handled most of the game design myself, shaped by playtesting and feedback from friends along the way. i've also had the pleasure of collaborating with artists such as victoria vincent and mabel ye, who've helped bring the cards to life.
