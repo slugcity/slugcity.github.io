@@ -425,8 +425,13 @@
 
     /* ─── Mobile layout ─── */
     @media (max-width: 768px) {
+        html, body { overflow: hidden !important; }
         .sidebar { display: none !important; }
         p { font-size: 14px !important; }
+        #mobile-path { font-size: 14px !important; }
+        .song-duration { font-size: 14px !important; }
+        .pico-text { font-size: 11px !important; }
+        .content { user-select: none !important; -webkit-user-select: none !important; }
         .spread {
             flex-direction: column !important;
             padding-top: 65px !important;
@@ -985,8 +990,9 @@
                         badgeRef = badge;
                         badge.style.transition = 'filter 0.6s ease, opacity 0.6s ease';
                         const titleText = 'DOWNIT';
-                        const titleW = titleText.length * Math.round(29 * 2);
-                        const title = renderBitmapText(titleText, container, { scale: 2, width: titleW });
+                        const titleScale = window.innerWidth < 768 ? 1 : 2;
+                        const titleW = titleText.length * Math.round(29 * titleScale);
+                        const title = renderBitmapText(titleText, container, { scale: titleScale, width: titleW });
                         const cv = renderBitmapText(downitText, container, { scale: 0.6 });
                         cvRef = cv;
                         titleRef = title;
@@ -1120,6 +1126,7 @@
                 },
                 'teeny dungeon': (container) => {
                     const p = document.createElement('p');
+                    p.className = 'pico-text';
                     p.style.cssText = 'padding-left:5px; font-family:pico-font; text-transform:uppercase; font-size:14px; line-height:2;';
                     fetch('games/text/teenydungeon.txt')
                         .then(r => r.text())
@@ -1140,6 +1147,7 @@
                     container.appendChild(canvas);
 
                     const p = document.createElement('p');
+                    p.className = 'pico-text';
                     p.style.cssText = 'padding-left:5px; font-family:pico-font; text-transform:uppercase; font-size:14px; line-height:2; position:relative; z-index:2; text-shadow: 0px 3px 3px #00000022;';
                     fetch('games/text/picocraft.txt')
                         .then(r => r.text())
@@ -1436,6 +1444,7 @@
                     animId = requestAnimationFrame(draw);
 
                     const p = document.createElement('p');
+                    p.className = 'pico-text';
                     p.style.cssText = 'padding-left:5px; font-family:pico-font; text-transform:uppercase; font-size:14px; line-height:2; text-shadow:0px 5px 8px #000000aa; position:relative; z-index:1; ';
                     fetch('games/text/redrock.txt')
                         .then(r => r.text())
